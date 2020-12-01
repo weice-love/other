@@ -6,3 +6,11 @@ rz -y
 unzip -o 1.zip
 #### 将windows的换行符替换成linux换行
 sed -i -e 's/\r$//' <文件名>
+
+##### 统计某个字符串出现的次数
+
+grep -o "xxx" file | wc -l
+
+###### 请求接口
+
+curl  -H '192.168.50.191/v1/email/sendEmail' -C 'Content-Type: application/json' -d '{"text": "aaa","to": ["xxx"]}'
