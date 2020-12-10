@@ -22,3 +22,36 @@ netstat -tnl
 ### 安装ssh
 
 sudo apt-get install openssh-server openssh-client 
+
+#### ubuntu 修改时区
+
+1. date -R #查看时区
+2. tzselect #选择时区
+3. 数字选择: 4 -> 9-> 1 -> 1
+4. sudo cp /usr/share/zoneinfo/Asia/Shanghai  /etc/localtime #修改
+5. 再次查看时区
+
+#### ubuntu 修改host文件
+
+	1. sudo vim /etc/hosts
+ 	2. 添加需要解析的地址
+ 	3. sudo /etc/init.d/networking restart #重启网络
+
+#### 安装ping
+
+​	sudo apt-get install iputils-ping
+
+#### 安装网络工具
+
+​	sudo apt install net-tools
+
+#### 安装vim
+
+​	apt-get install vim-gtk
+
+#### 文件输入
+
+​	echo "xxx" > file
+
+​	echo "xxx" >> file # 追加文件
+
