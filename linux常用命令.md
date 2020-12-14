@@ -55,3 +55,45 @@ sudo apt-get install openssh-server openssh-client
 
 ​	echo "xxx" >> file # 追加文件
 
+#### 安装nodejs
+
+```
+sudo apt install nodejs
+sudo apt remove nodejs
+sudo apt purge nodejs # 删除配置文件
+sudo apt autoremove # 自动删除没有使用的包
+```
+
+#### 修改DNS,HOSTS
+
+```
+/etc/resoulv.conf
+/etc/hosts
+```
+
+#### 查看服务状态
+
+```
+service --status-all
+```
+
+### 查看系统状态
+
+```
+uname -a # 内核信息
+cat /proc/version # 当前操作系统版本信息
+```
+
+#### 开放指定端口
+
+```
+sudo apt-get install iptables
+# 临时方案
+iptables -I INPUT -p tcp --dport 80 -j ACCEPT
+iptables-save
+# 持久方案
+sudo apt-get install iptables-persistent
+sudo netfilter-persistent save
+sudo netfilter-persistent reload
+```
+
