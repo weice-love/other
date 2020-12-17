@@ -32,3 +32,11 @@ pause
 start cmd /k "cd/d D:\\Redis-x64-3.2.100 &&redis-server.exe &&taskkill /f /t /im cmd.exe"
 ```
 
+#### 获取远程共享文件
+
+```
+1. ctrl + r
+2. \\ip
+3. 输入账号密码
+```
+
