@@ -9,3 +9,7 @@ GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'mypassword' WITH GRANT 
 show variables like '%storage_engine%';
 # 查看当前表的选择的存储引擎
 show create table `fuel_station`;
+
+# 创建备份表
+CREATE TABLE IF NOT EXISTS XXX_COPY LIKE XXX;
+INSERT INTO XXX_COPY SELECT * FROM	XXX WHERE condition = true;
