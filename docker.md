@@ -5,3 +5,16 @@
 3. systemctl daemon-reload
 4. systemctl restart docker.service   ##重启服务
 
+### 安装中文字体
+
+```
+      \nRUN echo "deb http://httpredir.debian.org/debian jessie main contrib" > /etc/apt/sources.list
+      \nRUN echo "deb http://security.debian.org/ jessie/updates main contrib" >> /etc/apt/sources.list
+      \nRUN echo "ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true" | debconf-set-selections
+      \nRUN apt-get update
+      \nRUN apt-get install -y ttf-mscorefonts-installer
+      \nRUN apt-get clean
+      \nRUN apt-get autoremove -y
+      \nRUN rm -rf /var/lib/apt/lists/*
+```
+
