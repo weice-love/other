@@ -13,3 +13,13 @@ show create table `fuel_station`;
 # 创建备份表
 CREATE TABLE IF NOT EXISTS XXX_COPY LIKE XXX;
 INSERT INTO XXX_COPY SELECT * FROM	XXX WHERE condition = true;
+
+#### 数据库查询
+
+```
+show variables like 'log_%';
+show master logs;
+show master status;
+show binlog events in 'mysql-bin.000122';
+```
+
