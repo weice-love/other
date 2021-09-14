@@ -7,10 +7,10 @@ package cn.weicelove.util.bridge;
  */
 public abstract class Ipay {
 
-    protected IPayMode IPayMode;
+    protected IPayMode payMode;
 
-    public Ipay(IPayMode IPayMode) {
-        this.IPayMode = IPayMode;
+    public Ipay(IPayMode payMode) {
+        this.payMode = payMode;
     }
 
     abstract boolean transfer(String userId);

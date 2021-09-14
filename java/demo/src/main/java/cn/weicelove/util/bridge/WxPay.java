@@ -13,7 +13,7 @@ public class WxPay extends Ipay {
 
     @Override
     boolean transfer(String userId) {
-        boolean security = IPayMode.security(userId);
+        boolean security = payMode.security(userId);
         if (!security) {
             return false;
         }
