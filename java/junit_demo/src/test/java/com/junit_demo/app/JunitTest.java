@@ -135,18 +135,18 @@ public class JunitTest {
         ).iterator();
     }
 
-    @Test
-    @DisplayName("抛出异常测试")
-    public void exceptionStart() {
-        int a = 1 /0;
-    }
-
-    @Test
-    @Disabled
-    @DisplayName("抛出空指针异常测试")
-    public void nullExceptionStart() {
-        throw new NullPointerException();
-    }
+//    @Test
+//    @DisplayName("抛出异常测试")
+//    public void exceptionStart() {
+//        int a = 1 /0;
+//    }
+//
+//    @Test
+//    @Disabled
+//    @DisplayName("抛出空指针异常测试")
+//    public void nullExceptionStart() {
+//        throw new NullPointerException();
+//    }
 }
 /*
 @Test :表示方法是测试方法。职责单一,不能声明属性, 由Jupiter提供额外测试
