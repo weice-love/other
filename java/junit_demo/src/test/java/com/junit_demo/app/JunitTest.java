@@ -2,6 +2,7 @@ package com.junit_demo.app;
 
 import com.junit_demo.app.annotion.FileSource;
 import com.junit_demo.app.model.Student;
+import com.junit_demo.app.util.PrintTool;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -97,7 +98,8 @@ public class JunitTest {
     public void testRepeated() {
         Random random = new Random();
         int i = random.nextInt(100);
-        assertTrue(i < 50);
+        PrintTool.print(i);
+//        assertTrue(i < 50);
     }
 
     static Stream<String> source() {

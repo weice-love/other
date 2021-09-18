@@ -1,8 +1,12 @@
 package com.junit_demo.app.java8;
 
+import com.alibaba.fastjson.JSON;
 import com.junit_demo.app.util.PrintTool;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.io.IOException;
 import java.net.URI;
@@ -13,6 +17,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.List;
+import java.util.OptionalInt;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -23,6 +29,38 @@ import java.util.stream.Stream;
  * <p> create date :  2021/9/15 10:16
  */
 public class StreamDemo {
+
+    @ParameterizedTest
+    @ValueSource(strings = {"test", "prod", "dev"})
+    @DisplayName("字符串拆解")
+    public void splitStr(String str) {
+        List<String> strings = Arrays.asList(str);
+        List<Stream<String>> collect = strings.stream().map(e -> e.split("")).map(Stream::of).collect(Collectors.toList());
+//        System.out.println("collect: " + JSON.toJSONString(strings.stream().map(e -> e.split("")).map(Stream::of).collect(Collectors.toList())));
+        System.out.println("collect: " + JSON.toJSONString(strings.stream().map(e -> e.split("")).flatMap(Stream::of).collect(Collectors.toList())));
+    }
+
+    @Test
+    @DisplayName("找到最大值")
+    public void findMaxValue() {
+        int[] nums = {1,2,4654,31241654,454,1521,313,465464,1};
+        OptionalInt optionalInt = Arrays.stream(nums).reduce(Math::max);
+        optionalInt.ifPresent(PrintTool::print);
+    }
+
+    @Test
+    @DisplayName("求和")
+    public void sumValue() {
+        int[] nums = {1,2,4654,31241654,454,1521,313,465464,1};
+        int sum = Arrays.stream(nums).reduce(0, Integer::sum);
+        int sum2 = 0;
+        for (int i = 0; i < nums.length; i++) {
+            sum2 += nums[i];
+        }
+        PrintTool.print(sum);
+        PrintTool.print(sum2);
+        Assertions.assertEquals(sum2, sum, () -> "总和不相等");
+    }
 
     @Test
     @DisplayName("值转流")
