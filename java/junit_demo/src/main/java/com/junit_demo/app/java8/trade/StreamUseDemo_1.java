@@ -1,10 +1,16 @@
 package com.junit_demo.app.java8.trade;
 
+import com.alibaba.fastjson.JSON;
+import com.junit_demo.app.annotion.ListSource;
 import com.junit_demo.app.java8.model.Trader;
 import com.junit_demo.app.java8.model.Transaction;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.IntSummaryStatistics;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,19 +21,25 @@ import java.util.stream.Collectors;
  */
 public class StreamUseDemo_1 {
 
-    public static void main(String[] args) {
-        Trader raoul = new Trader("Raoul", "Cambridge");
-        Trader mario = new Trader("Mario","Milan");
-        Trader alan = new Trader("Alan","Cambridge");
-        Trader brian = new Trader("Brian","Cambridge");
-        List<Transaction> transactions = Arrays.asList(
-                new Transaction(brian, 2011, 300),
-                new Transaction(raoul, 2012, 1000),
-                new Transaction(raoul, 2011, 400),
-                new Transaction(mario, 2012, 710),
-                new Transaction(mario, 2012, 700),
-                new Transaction(alan, 2012, 950)
-        );
+//    @Test
+    @ParameterizedTest
+    @ListSource(resource = "transaction.json", clazz = Transaction.class)
+    @DisplayName("流的应用")
+    public void streamUseTest(List<Transaction> transactions) {
+//        Trader raoul = new Trader("Raoul", "Cambridge");
+//        Trader mario = new Trader("Mario","Milan");
+//        Trader alan = new Trader("Alan","Cambridge");
+//        Trader brian = new Trader("Brian","Cambridge");
+//        List<Transaction> transactions = Arrays.asList(
+//                new Transaction(brian, 2011, 300),
+//                new Transaction(raoul, 2012, 1000),
+//                new Transaction(raoul, 2011, 400),
+//                new Transaction(mario, 2012, 710),
+//                new Transaction(mario, 2012, 700),
+//                new Transaction(alan, 2012, 950)
+//        );
+
+        System.out.println(JSON.toJSONString(transactions));
 
         // 找出2011年发生的所有交易，并按交易额排序（从低到高）。
         print(transactions.stream().filter(e -> e.getYear() == 2011).sorted(Comparator.comparing(Transaction::getValue)).collect(Collectors.toList()));
@@ -47,8 +59,18 @@ public class StreamUseDemo_1 {
         transactions.stream().filter(e -> "Milan".equals(e.getTrader().getCity())).forEach(System.out::println);
         // 所有交易中，最高的交易额是多少
         System.out.println(transactions.stream().map(Transaction::getValue).reduce(Integer::max));
+        transactions.stream().collect(Collectors.maxBy(Comparator.comparing(Transaction::getValue))).ifPresent(System.out::println);
         // 找到交易额最小的交易
         System.out.println(transactions.stream().map(Transaction::getValue).reduce(Integer::min));
+
+        // 获取数值
+        IntSummaryStatistics transactionIntSummaryStatistics = transactions.stream().collect(Collectors.summarizingInt(Transaction::getValue));
+        System.out.println("最大值: " + transactionIntSummaryStatistics.getMax());
+        System.out.println("最小值: " + transactionIntSummaryStatistics.getMin());
+        System.out.println("个数: " + transactionIntSummaryStatistics.getCount());
+        System.out.println("总和: " + transactionIntSummaryStatistics.getSum());
+        System.out.println("平均值: " + transactionIntSummaryStatistics.getAverage());
+
     }
 
     public static <T> void print(List<T> result1) {

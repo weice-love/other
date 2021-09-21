@@ -1,12 +1,23 @@
 package com.junit_demo.app.java8.model;
 
 public class Trader {
-    private final String name;
-    private final String city;
+    private String name;
+    private String city;
+
+    public Trader() {
+    }
 
     public Trader(String n, String c) {
         this.name = n;
         this.city = c;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public String getName() {
