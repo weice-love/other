@@ -1,5 +1,8 @@
 package com.junit_demo.app.java8.trade;
 
+import com.junit_demo.app.java8.model.Trader;
+import com.junit_demo.app.java8.model.Transaction;
+
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -10,7 +13,7 @@ import java.util.stream.Collectors;
  * <p> description :
  * <p> create date :  2021/9/8 17:51
  */
-public class Test {
+public class StreamUseDemo_1 {
 
     public static void main(String[] args) {
         Trader raoul = new Trader("Raoul", "Cambridge");

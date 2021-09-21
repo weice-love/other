@@ -1,4 +1,4 @@
-package com.junit_demo.app.java8.trade;
+package com.junit_demo.app.java8.model;
 
 public class Trader {
     private final String name;
