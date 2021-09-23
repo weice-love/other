@@ -4,8 +4,11 @@ import com.junit_demo.app.annotion.ListSource;
 import com.junit_demo.app.java8.model.Transaction;
 import com.junit_demo.app.util.PrintTool;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -25,5 +28,19 @@ public class ReducingTest {
         PrintTool.print(sum);
         Optional<Transaction> maxTransaction = transactions.stream().collect(Collectors.reducing((a, b) -> (a.getValue() > b.getValue()) ? a : b));
         maxTransaction.ifPresent(PrintTool::print);
+    }
+
+    @Test
+    @DisplayName("收集器")
+    public void intCollect() {
+        // 不可并行操作
+        List<Integer> integerList = Arrays.asList(1, 2, 3, 4, 5).stream().reduce(new ArrayList<>(), (List<Integer> a, Integer b) -> {
+            a.add(b);
+            return a;
+        }, (List<Integer> a, List<Integer> b) -> {
+            a.addAll(b);
+            return a;
+        });
+        List<Integer> collect = Arrays.asList(1, 2, 3, 4, 5).stream().collect(Collectors.toList());
     }
 }
