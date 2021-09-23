@@ -7,8 +7,10 @@ import com.junit_demo.app.util.PrintTool;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -55,6 +57,35 @@ public class GroupTest {
     @DisplayName("按子组收集数据")
     public void groupBySelfTest(List<Menu> menus) {
         Map<Integer, Long> collect = menus.stream().collect(Collectors.groupingBy(Menu::getType, Collectors.counting()));
+        PrintTool.print(JSON.toJSONString(collect));
+    }
+
+    @ParameterizedTest
+    @ListSource(resource = "menu.json", clazz = Menu.class)
+    @DisplayName("按子组收集数据2")
+    public void groupBySelfTest2(List<Menu> menus) {
+        Map<Integer, Optional<Menu>> collect = menus.stream().collect(Collectors.groupingBy(Menu::getType,
+                Collectors.maxBy(Comparator.comparing(Menu::getCalories))));
+        PrintTool.print(JSON.toJSONString(collect));
+    }
+
+    @ParameterizedTest
+    @ListSource(resource = "menu.json", clazz = Menu.class)
+    @DisplayName("按子组收集数据2-optional转换")
+    public void groupBySelfAndTransferTest2(List<Menu> menus) {
+        Map<Integer, Menu> collect = menus.stream().collect(Collectors.groupingBy(Menu::getType,
+                Collectors.collectingAndThen(Collectors.maxBy(Comparator.comparing(Menu::getCalories)), Optional::get)
+        ));
+        PrintTool.print(JSON.toJSONString(collect));
+    }
+
+    @ParameterizedTest
+    @ListSource(resource = "menu.json", clazz = Menu.class)
+    @DisplayName("按子组收集数据2-mapping转换")
+    public void groupBySelfAndMappingTest2(List<Menu> menus) {
+        Map<Integer, Menu> collect = menus.stream().collect(Collectors.groupingBy(Menu::getType,
+                Collectors.collectingAndThen(Collectors.maxBy(Comparator.comparing(Menu::getCalories)), Optional::get)
+        ));
         PrintTool.print(JSON.toJSONString(collect));
     }
 }
