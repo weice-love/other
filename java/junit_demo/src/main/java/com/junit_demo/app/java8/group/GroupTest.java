@@ -11,6 +11,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -83,8 +84,12 @@ public class GroupTest {
     @ListSource(resource = "menu.json", clazz = Menu.class)
     @DisplayName("按子组收集数据2-mapping转换")
     public void groupBySelfAndMappingTest2(List<Menu> menus) {
-        Map<Integer, Menu> collect = menus.stream().collect(Collectors.groupingBy(Menu::getType,
-                Collectors.collectingAndThen(Collectors.maxBy(Comparator.comparing(Menu::getCalories)), Optional::get)
+        Map<Integer, Set<Menu.CaloriesEnum>> collect = menus.stream().collect(Collectors.groupingBy(Menu::getType,
+                Collectors.mapping(menu -> {
+                    if (menu.getCalories() >= 500) return Menu.CaloriesEnum.FAT;
+                    if (menu.getCalories() >= 200) return Menu.CaloriesEnum.NORMAL;
+                    return Menu.CaloriesEnum.DIET;
+                }, Collectors.toSet())
         ));
         PrintTool.print(JSON.toJSONString(collect));
     }
