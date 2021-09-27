@@ -59,7 +59,7 @@ public class PartitionTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {500})
+    @ValueSource(ints = {5000})
     @DisplayName("质数区分 时间比较")
     public void primeTimeCompare(int limit) {
         StopWatchTemplate.start("分区收集", () -> IntStream.range(2, limit).boxed().collect(Collectors.partitioningBy(PrimeUtil::isPrimeV2)));
