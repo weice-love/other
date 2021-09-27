@@ -2,6 +2,7 @@ package com.junit_demo.app.java8.partition;
 
 import com.alibaba.fastjson.JSON;
 import com.junit_demo.app.annotion.ListSource;
+import com.junit_demo.app.java8.collector.PrimeNumbersCollector;
 import com.junit_demo.app.java8.model.Menu;
 import com.junit_demo.app.util.PrimeUtil;
 import com.junit_demo.app.util.PrintTool;
@@ -44,6 +45,24 @@ public class PartitionTest {
     @DisplayName("质数区分测试(true | false)")
     public void partitionByPrime(int limit) {
         Map<Boolean, List<Integer>> collect = IntStream.range(2, limit).boxed().collect(Collectors.partitioningBy(PrimeUtil::isPrimeV2));
+        PrintTool.print(JSON.toJSONString(collect));
+    }
+
+
+    @ParameterizedTest
+    @ValueSource(ints = {200})
+    @DisplayName("质数区分测试(true | false) 使用自定义收集器")
+    public void partitionByPrimeWithSelfCollector(int limit) {
+        Map<Boolean, List<Integer>> collect = IntStream.range(2, limit).boxed().collect(new PrimeNumbersCollector());
+        PrintTool.print(JSON.toJSONString(collect));
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {20000})
+    @DisplayName("质数区分 时间比较")
+    public void primeTimeCompare(int limit) {
+        Map<Boolean, List<Integer>> collect = IntStream.range(2, limit).boxed().collect(new PrimeNumbersCollector());
+//        Map<Boolean, List<Integer>> collect = IntStream.range(2, limit).boxed().collect(new PrimeNumbersCollector());
         PrintTool.print(JSON.toJSONString(collect));
     }
 
