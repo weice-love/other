@@ -59,11 +59,20 @@ public class PartitionTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {5000})
+    @ValueSource(ints = {Integer.MAX_VALUE})
     @DisplayName("质数区分 时间比较")
     public void primeTimeCompare(int limit) {
-        StopWatchTemplate.start("分区收集", () -> IntStream.range(2, limit).boxed().collect(Collectors.partitioningBy(PrimeUtil::isPrimeV2)));
-        StopWatchTemplate.start("自定义收集器", () -> IntStream.range(2, limit).boxed().collect(new PrimeNumbersCollector()));
+
+        for (int i = 0; i < 1; i++) {
+            StopWatchTemplate.start("分区收集", () -> {
+                    IntStream.range(2, limit).boxed().collect(Collectors.partitioningBy(PrimeUtil::isPrimeV2));
+            });
+        }
+        for (int i = 0; i < 1; i++) {
+            StopWatchTemplate.start("自定义收集器", () -> {
+                    IntStream.range(2, limit).boxed().collect(new PrimeNumbersCollector());
+            });
+        }
     }
 
 }
