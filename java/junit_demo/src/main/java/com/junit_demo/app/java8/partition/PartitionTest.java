@@ -6,6 +6,7 @@ import com.junit_demo.app.java8.collector.PrimeNumbersCollector;
 import com.junit_demo.app.java8.model.Menu;
 import com.junit_demo.app.util.PrimeUtil;
 import com.junit_demo.app.util.PrintTool;
+import com.junit_demo.app.util.StopWatchTemplate;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -58,12 +59,11 @@ public class PartitionTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {20000})
+    @ValueSource(ints = {500})
     @DisplayName("质数区分 时间比较")
     public void primeTimeCompare(int limit) {
-        Map<Boolean, List<Integer>> collect = IntStream.range(2, limit).boxed().collect(new PrimeNumbersCollector());
-//        Map<Boolean, List<Integer>> collect = IntStream.range(2, limit).boxed().collect(new PrimeNumbersCollector());
-        PrintTool.print(JSON.toJSONString(collect));
+        StopWatchTemplate.start("分区收集", () -> IntStream.range(2, limit).boxed().collect(Collectors.partitioningBy(PrimeUtil::isPrimeV2)));
+        StopWatchTemplate.start("自定义收集器", () -> IntStream.range(2, limit).boxed().collect(new PrimeNumbersCollector()));
     }
 
 }
