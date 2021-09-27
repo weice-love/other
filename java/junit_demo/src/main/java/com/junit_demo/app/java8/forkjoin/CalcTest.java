@@ -2,6 +2,7 @@ package com.junit_demo.app.java8.forkjoin;
 
 import com.junit_demo.app.util.StopWatchTemplate;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.slf4j.Logger;
@@ -28,5 +29,11 @@ public class CalcTest {
         ForkJoinSumCalculator forkJoinSumCalculator = new ForkJoinSumCalculator(numbers);
         Long sum = StopWatchTemplate.start("2. 计算总和", () -> new ForkJoinPool().invoke(forkJoinSumCalculator));
         log.info("2. sum: {}", sum);
+    }
+
+    @Test
+    @DisplayName("获取系统参数")
+    public void get() {
+        log.info("{}", Runtime.getRuntime().availableProcessors());
     }
 }
