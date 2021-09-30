@@ -8,8 +8,11 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Optional;
 import java.util.concurrent.ForkJoinPool;
+import java.util.stream.IntStream;
 import java.util.stream.LongStream;
+import java.util.stream.Stream;
 
 /**
  * <p> @author     :  清风
@@ -24,11 +27,27 @@ public class CalcTest {
     @ValueSource(ints = {1000000000})
     @DisplayName("使用fork/join求和")
     public void calcSum(int ans) {
-        log.info("1. sum: {}", StopWatchTemplate.start("1. 计算总和", () -> LongStream.rangeClosed(1, ans).parallel().sum()));
+        // JIT优化（使用for循环）
+        IntStream.rangeClosed(1, 10).boxed().map(
+                a -> StopWatchTemplate.startAndReturnRunTime("自带框架 => " + a + ". 计算总和", () -> LongStream.rangeClosed(1, ans).parallel().sum())
+        ).reduce(Long::min).ifPresent(System.out::println);
+
         long[] numbers = LongStream.rangeClosed(1, ans).toArray();
-        ForkJoinSumCalculator forkJoinSumCalculator = new ForkJoinSumCalculator(numbers);
-        Long sum = StopWatchTemplate.start("2. 计算总和", () -> new ForkJoinPool().invoke(forkJoinSumCalculator));
-        log.info("2. sum: {}", sum);
+        IntStream.rangeClosed(1, 10).boxed().map(
+                a -> {
+                    ForkJoinSumCalculator forkJoinSumCalculator = new ForkJoinSumCalculator(numbers);
+                    return StopWatchTemplate.startAndReturnRunTime("自定义框架 => " + a + ". 计算总和", () -> new ForkJoinPool().invoke(forkJoinSumCalculator));
+                }
+        ).reduce(Long::min).ifPresent(System.out::println);
+
+//        ForkJoinSumCalculator forkJoinSumCalculator = new ForkJoinSumCalculator(numbers);
+//        Long sum = StopWatchTemplate.start("2. 计算总和", () -> new ForkJoinPool().invoke(forkJoinSumCalculator));
+
+//        log.info("1. sum: {}", StopWatchTemplate.start("1. 计算总和", () -> LongStream.rangeClosed(1, ans).parallel().sum()));
+//        long[] numbers = LongStream.rangeClosed(1, ans).toArray();
+//        ForkJoinSumCalculator forkJoinSumCalculator = new ForkJoinSumCalculator(numbers);
+//        Long sum = StopWatchTemplate.start("2. 计算总和", () -> new ForkJoinPool().invoke(forkJoinSumCalculator));
+//        log.info("2. sum: {}", sum);
     }
 
     @Test
