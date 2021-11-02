@@ -175,3 +175,8 @@ public static Product createProduct(String name){
     ```
 
 
+#### Optional说明
+在你的代码中始终如一地使用Optional，能非常清晰地界定出变量值的缺失是结构上的问
+题，还是你算法上的缺陷，抑或是你数据中的问题。另外，我们还想特别强调，引入Optional
+类的意图并非要消除每一个null引用。与此相反，它的目标是帮助你更好地设计出普适的API，
+让程序员看到方法签名，就能了解它是否接受一个Optional的值。
