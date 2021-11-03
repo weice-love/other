@@ -1,12 +1,13 @@
 package com.junit_demo.app;
 
+import com.junit_demo.app.annotion.ExcelSource;
 import com.junit_demo.app.annotion.FileSource;
 import com.junit_demo.app.model.Student;
+import com.junit_demo.app.model.UserSyncVO;
 import com.junit_demo.app.util.PrintTool;
+import org.apache.commons.codec.binary.Base64;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.RepeatedTest;
@@ -18,10 +19,15 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.commons.util.StringUtils;
 
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -90,6 +96,35 @@ public class JunitTest {
     @DisplayName("参数化测试-json文件(读入实体类)")
     public void parameterizedTest4(Student student) {
         System.out.println("student name:" + student.getName());
+    }
+
+
+    @ParameterizedTest
+    // 自定义文件读入
+    @ExcelSource(resource = "C:\\Users\\EDZ\\Desktop\\异常\\优惠券同步\\mq.xlsx", clazz = UserSyncVO.class)
+    @DisplayName("参数化测试-excel文件(读入实体类)")
+    public void parameterizedTest4(List<UserSyncVO> userSyncVOS) {
+        HashMap<String, String> reduce = userSyncVOS.stream()
+                .reduce(new HashMap<>(), (a, b) -> {
+                    a.put(b.getMsgId(), new String(Base64.decodeBase64(b.getBody()), StandardCharsets.UTF_8));
+                    return a;
+                }, (a, b) -> {
+                    HashMap<String, String> result = new HashMap<>();
+                    for (Map.Entry<String, String> stringStringEntry : a.entrySet()) {
+                        result.put(stringStringEntry.getKey(), stringStringEntry.getValue());
+                    }
+                    for (Map.Entry<String, String> stringStringEntry : b.entrySet()) {
+                        result.put(stringStringEntry.getKey(), stringStringEntry.getValue());
+                    }
+                    return result;
+                });
+        for (Map.Entry<String, String> stringStringEntry : reduce.entrySet()) {
+            System.out.println("==============================================");
+            System.out.println("messageId: " + stringStringEntry.getKey());
+            System.out.println("=>");
+            System.out.println(stringStringEntry.getValue());
+        }
+        System.out.println("size:" + reduce.size());
     }
 
     // 2: 重复次数
