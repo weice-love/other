@@ -1,3 +1,9 @@
+#### docker安装
+
+ubuntu: curl -fsSL https://get.docker.com | bash -s docker --mirror Aliyun
+
+
+
 ### 切换镜像源
 
 1. vim /etc/docker/daemon.json      ##没有该文件则自己创建
@@ -16,5 +22,14 @@
       \nRUN apt-get clean
       \nRUN apt-get autoremove -y
       \nRUN rm -rf /var/lib/apt/lists/*
+```
+
+#### 创建网络
+
+```
+#-d 指定网络类型（bridge，overlay）
+docker network create -d {网络类型} {网络名称}
+demo:
+	docker network create -d bridge s
 ```
 
