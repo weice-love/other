@@ -1,6 +1,5 @@
 package com.junit_demo.app.java8.optional;
 
-import org.graalvm.compiler.core.common.type.ArithmeticOpTable;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
