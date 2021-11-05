@@ -22,6 +22,24 @@ public class SyncTest {
 
     private static final Logger log = LoggerFactory.getLogger(SyncTest.class);
 
+    @DisplayName("使用建CompletableFuture内置方法实现异步执行")
+    @Test
+    public void innerMethodTest() {
+        CompletableFuture<Integer> integerCompletableFuture = CompletableFuture.supplyAsync(() -> getPrice(RandomStringUtils.random(2)));
+        try {
+            Integer integer = integerCompletableFuture.get();
+        } catch (Exception e) {
+            log.error("msg: ", e);
+        }
+
+        CompletableFuture<Integer> integerCompletableFuture1 = CompletableFuture.supplyAsync(() -> getPrice(RandomStringUtils.random(1)));
+        try {
+            Integer integer = integerCompletableFuture1.get();
+        } catch (Exception e) {
+            log.error("msg: ", e);
+        }
+    }
+
     @DisplayName("性能测试")
     @Test
     public void calcTest() {
