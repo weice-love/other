@@ -46,4 +46,16 @@ public class StopWatchTemplate {
 		}
 		return watch.getTotalTimeMillis();
 	}
+
+	public static <T> long startAndReturnRunTime(String taskId, Runnable runnable) {
+		StopWatch watch = new StopWatch(taskId);
+		watch.start();
+		try {
+			runnable.run();
+		} finally {
+			watch.stop();
+			log.info("StopWatch '{}': running time = {} ms", watch.getId(), watch.getTotalTimeMillis());
+		}
+		return watch.getTotalTimeMillis();
+	}
 }
