@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -34,6 +35,25 @@ public class SyncTest {
         log.info("异步调用执行100次平均时间: {}", sync);
     }
 
+    @DisplayName("异常测试")
+    @Test
+    public void exceptionTest() {
+        CompletableFuture<Integer> priceSyncWithCatchException = getPriceSyncWithCatchException(RandomStringUtils.random(1));
+        try {
+            Integer integer = priceSyncWithCatchException.get();
+        } catch (Exception e) {
+            log.error("msg: ", e);
+        }
+
+        CompletableFuture<Integer> priceSync = getPriceSync(RandomStringUtils.random(1));
+        try {
+            // 异常会卡死
+            Integer integer = priceSync.get();
+        } catch (Exception e) {
+            log.error("msg1: ", e);
+        }
+    }
+
     private static void doSomething() {
         int price = getPrice(RandomStringUtils.random(5));
         int price1 = getPrice(RandomStringUtils.random(5));
@@ -56,6 +76,20 @@ public class SyncTest {
         CompletableFuture<Integer> result = new CompletableFuture<>();
         new Thread(() -> {
             result.complete(getPrice(product));
+        }).start();
+        return result;
+    }
+
+    private static CompletableFuture<Integer> getPriceSyncWithCatchException(String product) {
+        CompletableFuture<Integer> result = new CompletableFuture<>();
+        new Thread(() -> {
+            try {
+                result.complete(getPrice(product));
+            } catch (Exception e) {
+                // 抛出异常
+//                result.completeExceptionally(new RuntimeException("你是个猪"));
+                result.completeExceptionally(e);
+            }
         }).start();
         return result;
     }
