@@ -3,6 +3,7 @@ package com.junit_demo.app.util;
 import com.junit_demo.app.java8.optional.OptionalTest;
 
 import java.util.Optional;
+import java.util.Properties;
 
 /**
  * <p> @author     :  清风
@@ -17,6 +18,13 @@ public class OptionalUtil {
         } catch (NumberFormatException e) {
             return Optional.empty();
         }
+    }
+
+    public static int readInt(Properties properties, String name) {
+        return Optional.ofNullable(properties.getProperty(name))
+                .flatMap(OptionalUtil::string2Int)
+                .filter(i -> i > 0)
+                .orElseGet(() -> 0);
     }
 
     public static void main(String[] args) {
