@@ -1,6 +1,7 @@
 package com.junit_demo.app.java8.completableFuture;
 
 import com.junit_demo.app.annotion.ListSource;
+import com.junit_demo.app.config.ThreadPoolConfig;
 import com.junit_demo.app.java8.model.Shop;
 import com.junit_demo.app.util.StopWatchTemplate;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -13,6 +14,8 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -45,6 +48,11 @@ public class SyncTest {
         StopWatchTemplate.start("串行流(9个shop)", () -> shops_9.stream().map(shop -> String.format("%s price is %d", shop.getName(), getPrice(shop.getName()))).collect(Collectors.toList()));
         StopWatchTemplate.start("并行流(9个shop)", () -> shops_9.parallelStream().map(shop -> String.format("%s price is %d", shop.getName(), getPrice(shop.getName()))).collect(Collectors.toList()));
         StopWatchTemplate.start("并行流(9个shop), CompletableFuture", () -> findPrices(shops_9));
+
+        // 以下使用自定义线程池执行操作
+        // todo 为啥还是1s
+        StopWatchTemplate.start("并行流(9个shop), CompletableFuture使用自定义Executor", () -> findPricesWithExecutor(shops_9, ThreadPoolConfig.getINSTANCE()));
+
     }
 
     @DisplayName("比较并行流和CompletableFuture")
@@ -115,6 +123,18 @@ public class SyncTest {
         } catch (Exception e) {
             log.error("msg1: ", e);
         }
+    }
+
+    private List<String> findPricesWithExecutor(List<Shop> shops, Executor executor) {
+        List<CompletableFuture<String>> priceFutures =
+                shops.stream()
+                        .map(shop -> CompletableFuture.supplyAsync(
+                                () -> shop.getName() + " price is " +
+                                        getPrice(shop.getName()), executor))
+                        .collect(Collectors.toList());
+        return priceFutures.stream()
+                .map(CompletableFuture::join)
+                .collect(Collectors.toList());
     }
 
     private List<String> findPrices(List<Shop> shops) {
