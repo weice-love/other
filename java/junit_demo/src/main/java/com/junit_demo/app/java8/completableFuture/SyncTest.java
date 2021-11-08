@@ -1,15 +1,18 @@
 package com.junit_demo.app.java8.completableFuture;
 
+import com.junit_demo.app.annotion.ListSource;
+import com.junit_demo.app.java8.model.Shop;
 import com.junit_demo.app.util.StopWatchTemplate;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -21,6 +24,48 @@ import java.util.stream.IntStream;
 public class SyncTest {
 
     private static final Logger log = LoggerFactory.getLogger(SyncTest.class);
+
+
+    @DisplayName("比较")
+    @Test
+    public void compare() {
+        List<Shop> shops_9 = IntStream.rangeClosed(1, 9)
+                .boxed()
+                .map(a -> new Shop(RandomStringUtils.randomAlphabetic(5)))
+                .collect(Collectors.toList());
+        List<Shop> shops_8 = IntStream.rangeClosed(1, 8)
+                .boxed()
+                .map(a -> new Shop(RandomStringUtils.randomAlphabetic(5)))
+                .collect(Collectors.toList());
+        StopWatchTemplate.start("串行流(8个shop)", () -> shops_8.stream().map(shop -> String.format("%s price is %d", shop.getName(), getPrice(shop.getName()))).collect(Collectors.toList()));
+        StopWatchTemplate.start("并行流(8个shop)", () -> shops_8.parallelStream().map(shop -> String.format("%s price is %d", shop.getName(), getPrice(shop.getName()))).collect(Collectors.toList()));
+        StopWatchTemplate.start("并行流(8个shop), CompletableFuture", () -> findPrices(shops_8));
+
+
+        StopWatchTemplate.start("串行流(9个shop)", () -> shops_9.stream().map(shop -> String.format("%s price is %d", shop.getName(), getPrice(shop.getName()))).collect(Collectors.toList()));
+        StopWatchTemplate.start("并行流(9个shop)", () -> shops_9.parallelStream().map(shop -> String.format("%s price is %d", shop.getName(), getPrice(shop.getName()))).collect(Collectors.toList()));
+        StopWatchTemplate.start("并行流(9个shop), CompletableFuture", () -> findPrices(shops_9));
+    }
+
+    @DisplayName("比较并行流和CompletableFuture")
+    @ParameterizedTest
+    @ListSource(resource = "shop_8.json", clazz = Shop.class)
+    public void compare_8(List<Shop> shops) {
+        // 并行流的底层的线程数，由以下方法获取
+        log.info("availableProcessors: {}", Runtime.getRuntime().availableProcessors());
+        StopWatchTemplate.start("串行流", () -> shops.stream().map(shop -> String.format("%s price is %d", shop.getName(), getPrice(shop.getName()))).collect(Collectors.toList()));
+        StopWatchTemplate.start("并行流", () -> shops.parallelStream().map(shop -> String.format("%s price is %d", shop.getName(), getPrice(shop.getName()))).collect(Collectors.toList()));
+    }
+
+    @DisplayName("比较并行流和CompletableFuture")
+    @ParameterizedTest
+    @ListSource(resource = "shop_9.json", clazz = Shop.class)
+    public void compare_9(List<Shop> shops) {
+        log.info("availableProcessors: {}", Runtime.getRuntime().availableProcessors());
+        StopWatchTemplate.start("串行流", () -> shops.stream().map(shop -> String.format("%s price is %d", shop.getName(), getPrice(shop.getName()))).collect(Collectors.toList()));
+        StopWatchTemplate.start("并行流", () -> shops.parallelStream().map(shop -> String.format("%s price is %d", shop.getName(), getPrice(shop.getName()))).collect(Collectors.toList()));
+    }
+
 
     @DisplayName("使用建CompletableFuture内置方法实现异步执行")
     @Test
@@ -72,6 +117,18 @@ public class SyncTest {
         }
     }
 
+    private List<String> findPrices(List<Shop> shops) {
+        List<CompletableFuture<String>> priceFutures =
+                shops.stream()
+                        .map(shop -> CompletableFuture.supplyAsync(
+                                () -> shop.getName() + " price is " +
+                                        getPrice(shop.getName())))
+                        .collect(Collectors.toList());
+        return priceFutures.stream()
+                .map(CompletableFuture::join)
+                .collect(Collectors.toList());
+    }
+
     private static void doSomething() {
         int price = getPrice(RandomStringUtils.random(5));
         int price1 = getPrice(RandomStringUtils.random(5));
@@ -120,7 +177,7 @@ public class SyncTest {
 
     private static void delay() {
         try {
-            Thread.sleep(200);
+            Thread.sleep(500);
         } catch (InterruptedException e) {
             throw new RuntimeException();
         }
