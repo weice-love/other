@@ -32,6 +32,10 @@ public class SyncTest {
     @DisplayName("比较")
     @Test
     public void compare() {
+        List<Shop> shops_16 = IntStream.rangeClosed(1, 16)
+                .boxed()
+                .map(a -> new Shop(RandomStringUtils.randomAlphabetic(5)))
+                .collect(Collectors.toList());
         List<Shop> shops_9 = IntStream.rangeClosed(1, 9)
                 .boxed()
                 .map(a -> new Shop(RandomStringUtils.randomAlphabetic(5)))
@@ -50,8 +54,13 @@ public class SyncTest {
         StopWatchTemplate.start("并行流(9个shop), CompletableFuture", () -> findPrices(shops_9));
 
         // 以下使用自定义线程池执行操作
-        // todo 为啥还是1s
         StopWatchTemplate.start("并行流(9个shop), CompletableFuture使用自定义Executor", () -> findPricesWithExecutor(shops_9, ThreadPoolConfig.getINSTANCE()));
+
+        StopWatchTemplate.start("串行流(16个shop)", () -> shops_16.stream().map(shop -> String.format("%s price is %d", shop.getName(), getPrice(shop.getName()))).collect(Collectors.toList()));
+        StopWatchTemplate.start("并行流(16个shop)", () -> shops_16.parallelStream().map(shop -> String.format("%s price is %d", shop.getName(), getPrice(shop.getName()))).collect(Collectors.toList()));
+        StopWatchTemplate.start("并行流(16个shop), CompletableFuture", () -> findPrices(shops_16));
+        // 只需要1s，能体现出使用自定义线程池的优势了； 以上的都是使用固定线程数的线程
+        StopWatchTemplate.start("并行流(16个shop), CompletableFuture使用自定义Executor", () -> findPricesWithExecutor(shops_16, ThreadPoolConfig.getINSTANCE()));
 
     }
 

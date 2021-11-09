@@ -23,7 +23,7 @@ public class ThreadPoolConfig {
 
     static {
         INSTANCE = new ThreadPoolExecutor(
-                Runtime.getRuntime().availableProcessors() - 2,
+                Runtime.getRuntime().availableProcessors(),
                 Runtime.getRuntime().availableProcessors() * 2,
                 3L,
                 TimeUnit.SECONDS,
