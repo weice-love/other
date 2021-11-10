@@ -29,6 +29,14 @@ public class SyncTest {
     private static final Logger log = LoggerFactory.getLogger(SyncTest.class);
 
 
+    /**
+     * @author     : 清风
+     * <p>description :
+     *      计算密集型: stream
+     *      设计I/O: 使用CompletableFuture
+     * <p>create time : 11:38 2021/11/9
+     *
+     */
     @DisplayName("比较")
     @Test
     public void compare() {
