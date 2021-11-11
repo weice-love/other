@@ -9,9 +9,13 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.time.chrono.ChronoLocalDate;
+import java.time.chrono.Chronology;
+import java.time.chrono.JapaneseDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
@@ -74,7 +78,34 @@ public class TimeZoneTest {
         // Instant => LocalDateTime
         Instant now = Instant.now();
         LocalDateTime localDateTime = LocalDateTime.ofInstant(now, shanghai);
-        // 测试小绿格
+        log.info("shanghai :{}", localDateTime);
+        // 利用UTC偏差计算时区
+        // 使用ISO-8601的历法系统，以相对于UTC/格林尼治时间的偏差方式表示日期时间
+        OffsetDateTime offsetDateTime = OffsetDateTime.of(localDateTime, ZoneOffset.of("+03:00"));
+        log.info("shanghai -3 :{}", offsetDateTime);
+    }
+
+    @DisplayName("日历系统")
+    @Test
+    public void tes() {
+        // ISO-8601
+        // ThaiBuddhistDate
+        // MinguoDate
+        // JapaneseDate
+        // HijrahDate
+
+        LocalDate date = LocalDate.of(2014, Month.MARCH, 18);
+        JapaneseDate japaneseDate = JapaneseDate.from(date);
+        log.info("{}", japaneseDate);
+
+        Chronology china = Chronology.ofLocale(Locale.CHINA);
+        ChronoLocalDate chinaChronoLocalDate = china.dateNow();
+        log.info("chinaChronoLocalDate: {}", chinaChronoLocalDate);
+        Chronology chinese = Chronology.ofLocale(Locale.CHINESE);
+        ChronoLocalDate chineseChronoLocalDate = chinese.dateNow();
+        log.info("chineseChronoLocalDate: {}", chineseChronoLocalDate);
+        Chronology japan = Chronology.ofLocale(Locale.JAPAN);
+        log.info("JAPAN: {}", japan.dateNow());
     }
 
 }
