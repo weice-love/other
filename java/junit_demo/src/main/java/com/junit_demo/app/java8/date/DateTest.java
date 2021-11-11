@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.Instant;
@@ -15,6 +16,9 @@ import java.time.Month;
 import java.time.Period;
 import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjuster;
+import java.time.temporal.TemporalAdjusters;
+
 
 /**
  * <p> @author     :  清风
@@ -27,10 +31,61 @@ public class DateTest {
 
     private static final Logger log = LoggerFactory.getLogger(DateTest.class);
 
+    @DisplayName("自定义TemporalAdjuster，实现所需功能")
+    @Test
+    public void defineTemporalAdjusterTest() {
+        TemporalAdjuster nextWorkingDay = localDate -> {
+            int dayOfWeek = localDate.get(ChronoField.DAY_OF_WEEK);
+            int addDays = 1;
+            if (dayOfWeek == DayOfWeek.FRIDAY.getValue()) {
+                addDays =3;
+            } else if(dayOfWeek == DayOfWeek.SATURDAY.getValue()) {
+                addDays = 2;
+            }
+            return localDate.plus(addDays, ChronoUnit.DAYS);
+        };
+
+        LocalDate now = LocalDate.of(2021, 11, 11);
+        log.info("接下来20天的工作日");
+        for (int i = 0; i < 20; i++) {
+            now = now.with(nextWorkingDay);
+            log.info("下{}天工作日: {}", i+ 1, now);
+        }
+    }
+
+    @DisplayName("使用 TemporalAdjuster")
+    @Test
+    public void temporalAdjusterTest() {
+        LocalDate localDate = LocalDate.of(2021, 11, 11);
+        log.info("date：{}", localDate.with(TemporalAdjusters.nextOrSame(DayOfWeek.SATURDAY)));
+        log.info("date：{}", localDate.with(TemporalAdjusters.lastDayOfMonth()));
+    }
+
+    /*
+        TemporalAdjusters相关方法
+            dayOfWeekInMonth 创建一个新的日期，它的值为同一个月中每一周的第几天
+            firstDayOfMonth 创建一个新的日期，它的值为当月的第一天
+            firstDayOfNextMonth 创建一个新的日期，它的值为下月的第一天
+            firstDayOfNextYear 创建一个新的日期，它的值为明年的第一天
+            firstDayOfYear 创建一个新的日期，它的值为当年的第一天
+            firstInMonth 创建一个新的日期，它的值为同一个月中，第一个符合星期几要求的值
+            lastDayOfMonth 创建一个新的日期，它的值为当月的最后一天
+            lastDayOfNextMonth 创建一个新的日期，它的值为下月的最后一天
+            lastDayOfNextYear 创建一个新的日期，它的值为明年的最后一天
+            lastDayOfYear 创建一个新的日期，它的值为今年的最后一天
+            lastInMonth 创建一个新的日期，它的值为同一个月中，最后一个符合星期几要求的值
+            next/previous
+            创建一个新的日期，并将其值设定为日期调整后或者调整前，第一个符合指定星
+            期几要求的日期
+            nextOrSame/previousOrSame
+            创建一个新的日期，并将其值设定为日期调整后或者调整前，第一个符合指定星
+            期几要求的日期，如果该日期已经符合要求，直接返回该对象
+     */
+
     @DisplayName("修改时间")
     @Test
     public void modify() {
-        // 使用with
+        // 使用with，以绝对方式
         LocalDate localDate = LocalDate.of(2021, 11, 11);
         log.info("address: {}", System.identityHashCode(localDate));
         LocalDate localDate1 = localDate.withYear(2022);
