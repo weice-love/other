@@ -42,4 +42,19 @@ public class Shop {
             throw new RuntimeException();
         }
     }
+
+    /**
+     * @author     : 清风
+     * <p>description : 0.5s ~ 2.5s随机延迟
+     * <p>create time : 11:20 2021/11/11
+     *
+     */
+    public static void randomDelay() {
+        int delay = 500 + random.nextInt(2000);
+        try {
+            Thread.sleep(delay);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

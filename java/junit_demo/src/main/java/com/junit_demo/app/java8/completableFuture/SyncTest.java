@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -198,7 +197,7 @@ public class SyncTest {
             try {
                 result.complete(getPrice(product));
             } catch (Exception e) {
-                // 抛出异常
+                // 抛出异常,否则会卡死线程
 //                result.completeExceptionally(new RuntimeException("你是个猪"));
                 result.completeExceptionally(e);
             }
