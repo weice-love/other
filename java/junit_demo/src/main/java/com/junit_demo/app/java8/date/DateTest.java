@@ -44,6 +44,16 @@ public class DateTest {
             }
             return localDate.plus(addDays, ChronoUnit.DAYS);
         };
+        TemporalAdjuster nextWorkingDay2 = TemporalAdjusters.ofDateAdjuster(localDate -> {
+            int dayOfWeek = localDate.get(ChronoField.DAY_OF_WEEK);
+            int addDays = 1;
+            if (dayOfWeek == DayOfWeek.FRIDAY.getValue()) {
+                addDays = 3;
+            } else if (dayOfWeek == DayOfWeek.SATURDAY.getValue()) {
+                addDays = 2;
+            }
+            return localDate.plus(addDays, ChronoUnit.DAYS);
+        });
 
         LocalDate now = LocalDate.of(2021, 11, 11);
         log.info("接下来20天的工作日");
