@@ -27,6 +27,38 @@ public class DateTest {
 
     private static final Logger log = LoggerFactory.getLogger(DateTest.class);
 
+    @DisplayName("修改时间")
+    @Test
+    public void modify() {
+        // 使用with
+        LocalDate localDate = LocalDate.of(2021, 11, 11);
+        log.info("address: {}", System.identityHashCode(localDate));
+        LocalDate localDate1 = localDate.withYear(2022);
+        log.info("address1: {}", System.identityHashCode(localDate1));
+        LocalDate date4 = localDate1.with(ChronoField.MONTH_OF_YEAR, 9);
+
+        // 以相对方式修改
+        LocalDate localDate2 = localDate.plusDays(10);
+        LocalDate localDate3 = localDate2.plus(11, ChronoUnit.DAYS);
+
+    }
+/*
+        from 是 依据传入的 Temporal 对象创建对象实例
+        now 是 依据系统时钟创建 Temporal 对象
+        of 是 由 Temporal 对象的某个部分创建该对象的实例
+        parse 是 由字符串创建 Temporal 对象的实例
+        atOffset 否 将 Temporal 对象和某个时区偏移相结合
+        atZone 否 将 Temporal 对象和某个时区相结合
+        format 否 使用某个指定的格式器将Temporal对象转换为字符串（Instant类不提供该方法）
+        get 否 读取 Temporal 对象的某一部分的值
+        minus 否 创建 Temporal 对象的一个副本，通过将当前 Temporal 对象的值减去一定的时长
+        创建该副本
+        plus 否 创建 Temporal 对象的一个副本，通过将当前 Temporal 对象的值加上一定的时长
+        创建该副本
+        with 否 以该 Temporal 对象为模板，对某些状态进行修改创建该对象的副本
+ */
+
+
     @DisplayName("Duration 或 Period使用")
     @Test
     public void durationTest() {
