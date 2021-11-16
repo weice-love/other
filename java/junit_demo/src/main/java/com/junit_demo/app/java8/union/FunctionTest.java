@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -23,6 +24,8 @@ public class FunctionTest {
     @DisplayName("取出子集")
     @Test
     public void getSubList() {
+
+//        Function<Double, Double> TEST = (Double x) -> x * x;
         List<Integer> collect = IntStream.rangeClosed(1, 3).boxed().collect(Collectors.toList());
         log.info("{}", collect);
         log.info("{}", subsets(collect));
@@ -41,8 +44,9 @@ public class FunctionTest {
     }
 
     private List<List<Integer>> concat(List<List<Integer>> subans, List<List<Integer>> subans1) {
-        List<List<Integer>> ans = new ArrayList<>();
-        ans.addAll(subans);
+//        List<List<Integer>> ans = new ArrayList<>();
+//        ans.addAll(subans);
+        List<List<Integer>> ans = new ArrayList<>(subans);
         ans.addAll(subans1);
         return ans;
     }
