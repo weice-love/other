@@ -17,9 +17,21 @@ public class Test {
 
     private static final Logger log = LoggerFactory.getLogger(Test.class);
 
+    private static long count = 0;
+
     public static void main(String[] args) {
-        List<String> strings = Arrays.asList("1,2,3");
-        String[] strings1 = strings.toArray(new String[0]);
-        log.info("{}", strings1);
+//        long count = 0;
+        while (true) {
+            long t1 = System.nanoTime();
+            for(int i = 0; i < 100000000; i++) {
+                count++;
+                if((count & 1) == 0) {
+                    count =1;
+                }
+            }
+            long t2  = System.nanoTime();
+            System.out.println((t2 - t1) + "ns " + count);
+        }
     }
+
 }
