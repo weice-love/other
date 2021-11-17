@@ -46,7 +46,8 @@ public class LazyTest {
     }
 
     public static MyList<Integer> primes(MyList<Integer> numbers) {
-        return new LazyList<>(numbers.head(), () -> primes(numbers.tail().filter(n -> n % numbers.head() != 0)), "primes");
+        log.info("numbers.head(): {}", numbers.head());
+        return new LazyList<>(numbers.head(), () -> primes(numbers.tail().filter(n -> n % numbers.head() != 0, numbers.head())), "primes");
     }
 
 
@@ -54,14 +55,19 @@ public class LazyTest {
     @Test
     public void lazyList() {
 //        MyList<Integer> list = new LazyList<>(5, () -> new LazyList<>(10, Empty::new));
-        LazyList<Integer> list = from(2);
+        MyList<Integer> list = from(2);
         log.info("head： {}", list.head());
         log.info("head -> head： {}", list.tail().head());
         log.info("head -> head -> head： {}", list.tail().tail().head());
+        log.info("head -> head -> head： {}", list.tail().tail().tail().head());
+//        for (int i = 0; i < 10; i++) {
+//            log.info("=================> 第{}个数: {}", i+1, list.head());
+//            list = list.tail();
+//        }
     }
 
     public LazyList<Integer> from(int n) {
-        return new LazyList<>(n, () -> from(n + 1));
+        return new LazyList<>(n, () -> from(n + 1), "form");
     }
 
     @DisplayName("构造普通队列")
@@ -153,8 +159,10 @@ public class LazyTest {
             return true;
         }
 
-        default MyList<T> filter(Predicate<T> p) {
-            return isEmpty() ? this : p.test(head()) ? new LazyList<>(head(), () -> tail().filter(p), "filter") : tail().filter(p);
+        default MyList<T> filter(Predicate<T> p, Integer val) {
+            boolean test = p.test(head());
+            log.info("=> head: {}, test: {}, val: {}", head(), test, val);
+            return isEmpty() ? this : test ? new LazyList<>(head(), () -> tail().filter(p, val), "filter") : tail().filter(p, val);
         }
     }
 
