@@ -161,7 +161,7 @@ public class LazyTest {
 
         default MyList<T> filter(Predicate<T> p, Integer val) {
             boolean test = p.test(head());
-            log.info("=> head: {}, test: {}, val: {}", head(), test, val);
+            log.info("=> isEmpty():{},  head: {}, test: {}, val: {}",isEmpty(), head(), test, val);
             return isEmpty() ? this : test ? new LazyList<>(head(), () -> tail().filter(p, val), "filter") : tail().filter(p, val);
         }
     }
