@@ -23,17 +23,18 @@ public class LazyTest {
     public void primeList() {
 //        MyList<Integer> list = new LazyList<>(5, () -> new LazyList<>(10, Empty::new));
         LazyList<Integer> list = from(2);
-        log.info("head： {}", list.head());
-        log.info("head -> head： {}", list.tail().head());
-        log.info("head -> head -> head： {}", list.tail().tail().head());
+//        log.info("head： {}", list.head());
+//        log.info("head -> head： {}", list.tail().head());
+//        log.info("head -> head -> head： {}", list.tail().tail().head());
+        // 使用了一个自动生成的数字列表，和生成了一个质数的列表
         MyList<Integer> primes = primes(list);
         // 使用循环
-//        for (int i = 0; i < 16000; i++) {
-//            log.info("第{}个质数: {}", i+1, primes.head());
-//            primes = primes.tail();
-//        }
+        for (int i = 0; i < 10; i++) {
+            log.info("=================> 第{}个质数: {}", i+1, primes.head());
+            primes = primes.tail();
+        }
         // 使用递归打印，存在堆栈溢出问题（java8不支持尾调优化）
-        printAll(primes, 1);
+//        printAll(primes, 1);
     }
 
     public static <T> void printAll(MyList<T> list, int ans) {
@@ -45,7 +46,7 @@ public class LazyTest {
     }
 
     public static MyList<Integer> primes(MyList<Integer> numbers) {
-        return new LazyList<>(numbers.head(), () -> primes(numbers.tail().filter(n -> n % numbers.head() != 0)));
+        return new LazyList<>(numbers.head(), () -> primes(numbers.tail().filter(n -> n % numbers.head() != 0)), "primes");
     }
 
 
@@ -72,10 +73,18 @@ public class LazyTest {
     static class LazyList<T> implements MyList<T> {
         private final T head;
         private final Supplier<MyList<T>> tail;
+        private String entrance;
 
         public LazyList(T head, Supplier<MyList<T>> tail) {
             this.head = head;
             this.tail = tail;
+            log.info("创建lazylist: {}", head);
+        }
+
+        public LazyList(T head, Supplier<MyList<T>> tail, String entrance) {
+            this.head = head;
+            this.tail = tail;
+            log.info("entrance:{}, 创建lazylist: {}", entrance, head);
         }
 
 
@@ -145,7 +154,7 @@ public class LazyTest {
         }
 
         default MyList<T> filter(Predicate<T> p) {
-            return isEmpty() ? this : p.test(head()) ? new LazyList<>(head(), () -> tail().filter(p)) : tail().filter(p);
+            return isEmpty() ? this : p.test(head()) ? new LazyList<>(head(), () -> tail().filter(p), "filter") : tail().filter(p);
         }
     }
 
