@@ -6,6 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.function.DoubleUnaryOperator;
+import java.util.stream.DoubleStream;
+import java.util.stream.IntStream;
 
 /**
  * <p> @author     :  清风
@@ -22,6 +24,12 @@ public class Transfer {
     private static DoubleUnaryOperator convertCtoF = curriedConverter(9.0 / 5, 32);
     private static DoubleUnaryOperator convertUSDtoGBP = curriedConverter(0.6, 0);
     private static DoubleUnaryOperator convertKmtoMi = curriedConverter(0.6214, 0);
+
+    @DisplayName("列表转换")
+    @Test
+    public void c2fList() {
+        DoubleStream.of(1, 2,3,3,4,10).map(convertCtoF).forEach(System.out::println);
+    }
 
     @DisplayName("科里化应用(摄氏度转华氏度)")
     @Test
