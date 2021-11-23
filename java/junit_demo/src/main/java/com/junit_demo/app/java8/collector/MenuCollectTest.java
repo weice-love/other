@@ -41,8 +41,8 @@ public class MenuCollectTest {
                 .fork("list", a -> a.collect(Collectors.toList()))
                 .fork("getAllName", a -> a.map(Menu::getName).collect(Collectors.toList()))
                 .getResults();
-        List<Menu> list = (List<Menu>)results.get("list");
-        List<String> names = (List<String>)results.get("getAllName");
+        List<Menu> list = results.get("list");
+        List<String> names = results.get("getAllName");
         PrintTool.print(JSON.toJSONString(list));
         PrintTool.print(JSON.toJSONString(names));
     }
