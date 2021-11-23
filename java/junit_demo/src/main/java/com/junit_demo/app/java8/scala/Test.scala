@@ -6,6 +6,16 @@ object Hello {
 
 
   def main(args: Array[String]) {
+    class Empty1 extends Sized
+    println(new Empty1().isEmpty())
+
+    class Box
+    val b1 = new Box() with Sized
+    println(b1.isEmpty())
+    val b2 = new Box()
+    // 编译错误
+//    b2.isEmpty()
+
     collectUse()
     fortest()
     bibao()
