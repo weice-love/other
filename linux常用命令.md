@@ -34,8 +34,8 @@ sudo apt-get install openssh-server openssh-client
 #### ubuntu 修改host文件
 
 	1. sudo vim /etc/hosts
- 	2. 添加需要解析的地址
- 	3. sudo /etc/init.d/networking restart #重启网络
+	2. 添加需要解析的地址
+	3. sudo /etc/init.d/networking restart #重启网络
 
 #### 安装ping
 
@@ -106,3 +106,6 @@ npm config set registry https://registry.npm.taobao.org
 // 配置后可通过下面方式来验证是否成功
 npm config get registry
 
+#### 查看端口情况
+
+lsof -i:80
