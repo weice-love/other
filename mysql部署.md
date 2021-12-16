@@ -35,6 +35,10 @@ GRANT REPLICATION SLAVE,  ON *.* TO 'slave'@'%';
 # 在master节点，查看状态，并记录下File,Position的值
 show master status;
 
+# 在进行数据迁移时，主库还需要加锁操作（保证数据不变）
+flush tables with read lock;
+unlock tables;
+
 # 进入从节点mysql命令行, 修改master相关配置
 change master to master_host='<docker服务主节点的mysql服务名>', master_user='<在主节点创建同步用户>', master_password='<密码>', master_port=3306, master_log_file='<主节点file的值>', master_log_pos= <主节点Position的值>, master_connect_retry=30;
 
@@ -42,6 +46,26 @@ change master to master_host='<docker服务主节点的mysql服务名>', master_
 start slave;
 # 查看从节点状态
 show slave status;
+
+# 从库最好设置成只读模式，避免误连误改（对于super权限的用户无效）
+set global read_only=1;
+
+# 从库创建只读用户
+create user 'anruoxin'@'%' identified by '123456';
+
+grant select on 'anruoxin'@'%';
+
+ps:
+1. grant 权限 on 数据库对象 to 用户
+	>	grant select, insert, update, delete on testdb.* to common_user@'%';
+2. 	查看用户权限：
+	>	show grants for dba@localhost;
+3. revoke 权限 from 数据库对象 to 用户
+4. 落库
+	>	flush privileges;
+5. 查看binlog
+	>	SHOW BINLOG EVENTS IN 'MYSQL-BIN.000388' FROM 135586062
+
 
 ```
 
