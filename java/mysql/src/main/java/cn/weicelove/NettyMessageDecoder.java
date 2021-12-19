@@ -65,10 +65,7 @@ public final class NettyMessageDecoder extends ByteToMessageDecoder {
         readableBytes -= 2;
         byte[] randomNumV2 = ByteTransferUtil.readFixLength(in, readableBytes);
         byte[] end = ByteTransferUtil.readFixLength(in, 1);
-//        byte[] messageHead = ByteTransferUtil.readFixLength(in, 0, 3);
-//        byte[] id = ByteTransferUtil.readFixLength(in, 3, 1);
-//        byte[] xieyihao = ByteTransferUtil.readFixLength(in, 4, 1);
-//        String content = ByteTransferUtil.readStringUtilNull(in, 5);
+
 
 
 //        System.out.println(contentLength);
