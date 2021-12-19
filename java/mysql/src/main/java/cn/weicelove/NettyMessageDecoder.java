@@ -1,5 +1,6 @@
 package cn.weicelove;
 
+import cn.weicelove.util.ByteTransferUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
@@ -21,9 +22,14 @@ public final class NettyMessageDecoder extends ByteToMessageDecoder {
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
         int readableBytes = in.readableBytes();
-        byte contentLength = in.readByte();
 
-        System.out.println(contentLength);
+        byte[] messageHead = ByteTransferUtil.readFixLength(in, 0, 3);
+        byte[] id = ByteTransferUtil.readFixLength(in, 3, 1);
+        byte[] xieyihao = ByteTransferUtil.readFixLength(in, 4, 1);
+        String content = ByteTransferUtil.readStringUtilNull(in, 5);
+
+
+//        System.out.println(contentLength);
     }
 
 //    @Override
