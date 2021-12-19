@@ -2,6 +2,7 @@ package cn.weicelove.util;
 
 import io.netty.buffer.ByteBuf;
 
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -17,6 +18,30 @@ public class ByteTransferUtil {
 
     public static byte[] little2big(byte[] bytes) {
         return new byte[1];
+    }
+
+    public static  byte[] readFixLength(ByteBuf in, int length) {
+        byte[] content = new byte[length];
+        for (int i = 0; i < length; i++) {
+            content[length - i - 1] = in.readByte();
+        }
+        return content;
+    }
+    public static  byte[] readUtilNull(ByteBuf in) {
+
+        byte data;
+        byte[] array = new byte[1024];
+        int pos = 0;
+        while ((data = in.readByte()) != 0) {
+            array[pos++] = data;
+        }
+
+        byte[] content = new byte[pos];
+        for (int i = 0; i < pos; i++) {
+//            content[pos - i - 1] = array[i];
+            content[i] = array[i];
+        }
+        return content;
     }
 
     public static byte[] readFixLength(ByteBuf in,int index, int length) {
