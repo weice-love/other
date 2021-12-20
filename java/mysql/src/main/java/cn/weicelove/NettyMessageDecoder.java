@@ -81,19 +81,4 @@ public final class NettyMessageDecoder extends ByteToMessageDecoder {
         }
         System.out.println("");
     }
-
-//    @Override
-//    protected Object decode(ChannelHandlerContext ctx, ByteBuf in) throws Exception {
-//        // 为空说明是半包消息
-//        ByteBuf frame = (ByteBuf) super.decode(ctx, in);
-//        if (frame == null) {
-//            System.out.println("NettyMessageDecoder NULL");
-//            return null;
-//        }
-//        System.out.println("frame: " + frame.toString());
-//
-//        // todo ？？？ 按理应该用frame 的
-//        in.readerIndex(0);
-//        return null;
-//    }
 }
