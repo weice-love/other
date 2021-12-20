@@ -9,6 +9,11 @@ import io.netty.buffer.ByteBuf;
  * @author lizhuyang
  */
 public class ByteUtil {
+
+    public static byte readByte(ByteBuf data) {
+        return data.readByte();
+    }
+
     public static int readUB2(ByteBuf data) {
         int i = data.readByte() & 0xff;
         i |= (data.readByte() & 0xff) << 8;
@@ -84,4 +89,19 @@ public class ByteUtil {
         }
     }
 
+    public static byte[] readStringUtilNull(ByteBuf in) {
+        byte data;
+        byte[] array = new byte[1024];
+        int pos = 0;
+        while ((data = in.readByte()) != 0) {
+            array[pos++] = data;
+        }
+
+        byte[] content = new byte[pos];
+        for (int i = 0; i < pos; i++) {
+//            content[pos - i - 1] = array[i];
+            content[i] = array[i];
+        }
+        return content;
+    }
 }

@@ -49,7 +49,7 @@ public class TimeClient {
                         @Override
                         protected void initChannel(SocketChannel socketChannel) throws Exception {
                             // 协议解析
-                            socketChannel.pipeline().addLast(new NettyMessageDecoder());
+                            socketChannel.pipeline().addLast(new PacketDecoder());
                             // 连接成功后，保存握手信息
                             socketChannel.pipeline().addLast(new SaveHandShakeHandler());
                             // 连接后进行认证
