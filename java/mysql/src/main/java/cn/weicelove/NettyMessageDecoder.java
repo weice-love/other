@@ -33,6 +33,7 @@ public final class NettyMessageDecoder extends ByteToMessageDecoder {
         byte[] id = ByteTransferUtil.readFixLength(in, 1);
 
         byte[] protocol = ByteTransferUtil.readFixLength(in, 1);
+        printByte(protocol, "协议号");
         readableBytes -= 1;
         byte[] version = ByteTransferUtil.readUtilNull(in);
         readableBytes -= version.length;
@@ -41,6 +42,8 @@ public final class NettyMessageDecoder extends ByteToMessageDecoder {
         byte[] threadId = ByteTransferUtil.readFixLength(in, 4);
         readableBytes -= 4;
         byte[] randomNum = ByteTransferUtil.readFixLength(in, 8);
+        String randomNumStr = new String(randomNum, StandardCharsets.UTF_8);
+        System.out.println(randomNumStr);
         readableBytes -= 8;
         byte[] fillByte = ByteTransferUtil.readFixLength(in, 1);
         printByte(fillByte, "填充值");
