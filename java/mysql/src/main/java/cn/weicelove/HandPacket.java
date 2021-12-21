@@ -1,9 +1,8 @@
 package cn.weicelove;
 
 import cn.weicelove.util.ByteUtil;
-import io.netty.buffer.ByteBuf;
 
-public class HandPacket extends Packet{
+public class HandPacket extends BinaryPacket {
 
     public byte protocolVersion;
     public byte[] serverVersion;
@@ -14,8 +13,12 @@ public class HandPacket extends Packet{
     public int serverStatus;
     public byte[] restOfScrambleBuff;
 
-    public void parse(ByteBuf in) {
-        super.parse(in);
+    public HandPacket(int packetBodyLength, byte packetId, byte[] data) {
+        super(packetBodyLength, packetId, data);
+    }
+
+    public void parse() {
+        byte[] data = getData();
         protocolVersion = ByteUtil.readByte(in);
         serverVersion = ByteUtil.readStringUtilNull(in);
         threadId = ByteUtil.readUB4(in);
@@ -23,11 +26,5 @@ public class HandPacket extends Packet{
         serverCapabilities = ByteUtil.readUB2(in);
         serverCharsetIndex = ByteUtil.readByte(in);
         serverStatus = ByteUtil.readUB2(in);
-
-
-
-
-
-
     }
 }

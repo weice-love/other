@@ -1,12 +1,26 @@
 package cn.weicelove;
 
-import cn.weicelove.util.ByteUtil;
-import io.netty.buffer.ByteBuf;
-
 public abstract class Packet {
 
+    private int packetBodyLength;
+    private byte packetId;
+    private byte[] data;
 
-    public void parse(ByteBuf in) {
+    public Packet(int packetBodyLength, byte packetId, byte[] data) {
+        this.packetBodyLength = packetBodyLength;
+        this.packetId = packetId;
+        this.data = data;
+    }
 
+    public int getPacketBodyLength() {
+        return packetBodyLength;
+    }
+
+    public byte getPacketId() {
+        return packetId;
+    }
+
+    public byte[] getData() {
+        return data;
     }
 }

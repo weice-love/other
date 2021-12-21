@@ -8,8 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.util.List;
 
 public class PacketDecoder extends ByteToMessageDecoder {
@@ -18,13 +16,18 @@ public class PacketDecoder extends ByteToMessageDecoder {
 
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
-        int bodyLength = ByteUtil.readUB3(in);
-        byte id = in.readByte();
-        log.debug("bodyLength: {}, id: {}", bodyLength, id);
-
-//        ByteBuffer buffer = ByteBuffer.allocate(bodyLength).order(ByteOrder.BIG_ENDIAN);
-//        in.readBytes(buffer);
-        new HandPacket().parse(in);
-
+        int packetBodyLength = ByteUtil.readUB3(in);
+        byte packetId = in.readByte();
+        log.debug("bodyLength: {}, id: {}", packetBodyLength, packetId);
+        // 做标记，读取到半包,可以回滚
+        in.markReaderIndex();
+        if (in.readableBytes() < packetBodyLength) {
+            // 半包回溯
+            in.resetReaderIndex();
+            return;
+        }
+        byte[] data = in.readBytes(packetBodyLength).array();
+        BinaryPacket binaryPacket = new BinaryPacket(packetBodyLength, packetId, data);
+        out.add(binaryPacket);
     }
 }
