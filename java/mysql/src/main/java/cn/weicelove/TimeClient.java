@@ -51,7 +51,7 @@ public class TimeClient {
                             // 协议解析
                             socketChannel.pipeline().addLast(new PacketDecoder());
                             // 连接成功后，保存握手信息
-                            socketChannel.pipeline().addLast(new HandShakeHandler());
+                            socketChannel.pipeline().addLast(new PacketHandler(new Processor()));
                             // 连接后进行认证
 //                            socketChannel.pipeline().addLast(new LoginAuthReqHandler());
 //                            socketChannel.pipeline().addLast(new TimeClientHandler());

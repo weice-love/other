@@ -8,11 +8,18 @@ import io.netty.channel.ChannelHandlerContext;
  * <p> description :  包解析
  * <p> create date :  2021/12/21 15:59
  */
-public abstract class PacketHandler extends ChannelHandlerAdapter {
+public class PacketHandler extends ChannelHandlerAdapter {
+
+    private Processor processor;
+
+    public PacketHandler(Processor processor) {
+        this.processor = processor;
+    }
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         BinaryPacket binaryPacket = (BinaryPacket) msg;
+
 
     }
 }
