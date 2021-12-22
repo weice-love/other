@@ -10,16 +10,16 @@ import io.netty.channel.ChannelHandlerContext;
  */
 public class PacketHandler extends ChannelHandlerAdapter {
 
-    private Processor processor;
+    private StateProcessor stateProcessor;
 
-    public PacketHandler(Processor processor) {
-        this.processor = processor;
+    public PacketHandler(StateProcessor stateProcessor) {
+        this.stateProcessor = stateProcessor;
     }
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         BinaryPacket binaryPacket = (BinaryPacket) msg;
-
+        stateProcessor.process(ctx, binaryPacket);
 
     }
 }
