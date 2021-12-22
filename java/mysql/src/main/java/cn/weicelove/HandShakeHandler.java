@@ -31,7 +31,7 @@ public class HandShakeHandler extends ChannelHandlerAdapter {
 
     private void auth(ChannelHandlerContext ctx, Object msg) {
         HandPacket handPacket = (HandPacket) msg;
-        handPacket.parse();
+//        handPacket.parse();
 
     }
 }

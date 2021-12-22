@@ -13,8 +13,8 @@ public enum State {
         @Override
         void process(StateProcessor processor, ChannelHandlerContext ctx, BinaryPacket binaryPacket) {
             // 解析握手包
-            HandPacket handPacket = new HandPacket(binaryPacket);
-            handPacket.parse();
+            HandPacket handPacket = new HandPacket();
+            handPacket.parse(binaryPacket);
             processor.setState(AUTHING);
         }
     },
