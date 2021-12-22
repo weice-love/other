@@ -10,5 +10,6 @@ public class BinaryPacket extends Packet implements Parse {
 
     public void parse() {
         parse.parse();
+        System.out.println("BinaryPacket");
     }
 }

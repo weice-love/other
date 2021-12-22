@@ -12,15 +12,16 @@ public enum State {
     UN_AUTH {
         @Override
         void process(StateProcessor processor, ChannelHandlerContext ctx, BinaryPacket binaryPacket) {
-            new HandPacket()
-
+            // 解析握手包
+            HandPacket handPacket = new HandPacket(binaryPacket);
+            handPacket.parse();
             processor.setState(AUTHING);
         }
     },
     AUTHING {
         @Override
         void process(StateProcessor processor, ChannelHandlerContext ctx, BinaryPacket binaryPacket) {
-
+            processor.setState(AUTHED);
         }
     },
     AUTHED {

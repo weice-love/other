@@ -20,6 +20,5 @@ public class PacketHandler extends ChannelHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         BinaryPacket binaryPacket = (BinaryPacket) msg;
         stateProcessor.process(ctx, binaryPacket);
-
     }
 }

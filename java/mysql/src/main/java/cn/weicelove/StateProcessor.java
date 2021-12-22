@@ -19,10 +19,6 @@ public class StateProcessor {
         state.process(this, ctx, binaryPacket);
     }
 
-    public State getState() {
-        return state;
-    }
-
     public void setState(State state) {
         this.state = state;
     }
