@@ -43,6 +43,11 @@ public class ByteTransferUtil {
 //        return new String(chars);
 //    }
 
+    public static Byte hex2Byte(String hex) {
+        int i = Integer.parseInt(hex, 16);
+        return (byte) i;
+    }
+
     public static final byte[] scramble411(byte[] pass, byte[] seed) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("SHA-1");
         byte[] pass1 = md.digest(pass);

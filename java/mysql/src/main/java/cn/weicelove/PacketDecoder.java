@@ -2,6 +2,7 @@ package cn.weicelove;
 
 import cn.weicelove.util.ByteUtil;
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.EmptyByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import org.slf4j.Logger;
@@ -16,6 +17,9 @@ public class PacketDecoder extends ByteToMessageDecoder {
 
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
+        if (in instanceof EmptyByteBuf) {
+            return;
+        }
         int packetBodyLength = ByteUtil.readUB3(in);
         byte packetId = in.readByte();
         log.debug("bodyLength: {}, id: {}", packetBodyLength, packetId);

@@ -20,8 +20,8 @@ public class HandPacket {
     public byte[] authPluginDataPart2;
     public byte[] authPluginName;
 
-    public void parse(BinaryPacket binaryPacket) {
-        System.out.println("handshake");
+    public void  parse(BinaryPacket binaryPacket) {
+        System.out.println("parse handshake.");
 
         MessageReader messageReader = new MessageReader(binaryPacket.getPacketBodyLength(), binaryPacket.getData());
         packetId = binaryPacket.getPacketId();
@@ -44,7 +44,7 @@ public class HandPacket {
 //        if ((serverLowCapabilities & CapabilityConstants.CLIENT_PLUGIN_AUTH) > 0) {
             authPluginName = messageReader.readStringUtilNull();
 //        }
-        System.out.println(this.toString());
+        System.out.println("hand packet -> " + this.toString());
     }
 
     @Override

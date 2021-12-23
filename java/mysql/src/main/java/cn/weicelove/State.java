@@ -1,11 +1,15 @@
 package cn.weicelove;
 
+import cn.weicelove.util.MockUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p> @author     :  清风
@@ -30,7 +34,6 @@ public enum State {
         @Override
         void process(StateProcessor processor, ChannelHandlerContext ctx, BinaryPacket binaryPacket) {
             // 有可能是ok包，也有可能是error包
-            byte[] data = binaryPacket.getData();
             MessageReader messageReader = new MessageReader(binaryPacket.getPacketBodyLength(), binaryPacket.getData());
             byte b = messageReader.readByte();
             log.info("Packet msg: {}", b & 0xff);
@@ -39,7 +42,8 @@ public enum State {
             byte[] sqlStateMarker = messageReader.readStringFixLength(1);
             byte[] sqlState = messageReader.readStringFixLength(5);
             byte[] msg = messageReader.readBytes();
-            log.info("sqlStateMarker: {}, sqlState: {}, msg: {}",
+            log.info("errorCode: {}, sqlStateMarker: {}, sqlState: {}, msg: {}",
+                    errorCode,
                     new String(sqlStateMarker, StandardCharsets.UTF_8),
                     new String(sqlState, StandardCharsets.UTF_8),
                     new String(msg, StandardCharsets.UTF_8));
@@ -60,6 +64,7 @@ public enum State {
          try {
              AuthPacket authPacket = AuthPacket.writePacket(handPacket);
              ByteBuf buffer = authPacket.transferByteBuf(ctx);
+             log.info("auth packet size: {}", buffer.readableBytes());
              ctx.writeAndFlush(buffer);
          } catch (Exception e) {
              e.printStackTrace();
