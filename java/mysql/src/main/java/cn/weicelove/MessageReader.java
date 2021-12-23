@@ -42,7 +42,15 @@ public class MessageReader {
             position = (endIndex == length ? endIndex : endIndex + 1);
             return content;
         }
+        position++;
         return EMPTY_BYTES;
+    }
+
+    public byte[] readStringFixLength(int length) {
+        byte[] content = new byte[length];
+        System.arraycopy(data, position, content, 0, content.length);
+        position += length;
+        return content;
     }
 
     public static void main(String[] args) {
@@ -72,5 +80,15 @@ public class MessageReader {
         int i = data[position++] & 0xff;
         i |= (data[position++] & 0xff) << 8;
         return i;
+    }
+
+    public void skip(int step) {
+        position += step;
+    }
+
+    public byte[] readBytes() {
+        byte[] content = new byte[length - position];
+        System.arraycopy(data, position, content , 0, length - position);
+        return content;
     }
 }

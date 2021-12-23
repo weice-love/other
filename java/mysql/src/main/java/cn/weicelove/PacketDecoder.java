@@ -23,6 +23,7 @@ public class PacketDecoder extends ByteToMessageDecoder {
         in.markReaderIndex();
         if (in.readableBytes() < packetBodyLength) {
             // 半包回溯
+            System.out.println("================半包回溯========================");
             in.resetReaderIndex();
             return;
         }
