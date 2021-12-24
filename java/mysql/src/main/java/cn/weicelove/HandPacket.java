@@ -41,12 +41,13 @@ public class HandPacket {
         // 10 reserved (all [00])
         messageReader.skip(10);
         if ((serverLowCapabilities & CapabilityConstants.CLIENT_SECURE_CONNECTION) > 0) {
+            // todo 待选择
 //            authPluginDataPart2 = messageReader.readStringFixLength(Math.max(13, authDataLength - 8));
             authPluginDataPart2 = messageReader.readStringUtilNull();
         }
-//        if ((serverLowCapabilities & CapabilityConstants.CLIENT_PLUGIN_AUTH) > 0) {
+        if ((serverLowCapabilities & CapabilityConstants.CLIENT_PLUGIN_AUTH) > 0) {
             authPluginName = messageReader.readStringUtilNull();
-//        }
+        }
         log.info("parse handShake success!!! data: {}", this.toString());
     }
 

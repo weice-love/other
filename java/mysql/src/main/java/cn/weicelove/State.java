@@ -55,6 +55,8 @@ public enum State {
                     byte[] statusInfo = messageReader.readBytes();
                     log.debug("statusFlag: {}, numWarns: {}, statusInfo: {}", statusFlag, numWarns, new String(statusInfo, StandardCharsets.UTF_8));
                 }
+                // todo 暂时请求一下
+
             } else if (header == 254 && binaryPacket.getPacketBodyLength() + 4 < 9) {
                 log.debug("EOF Packet");
                 int warnings = messageReader.readUB2();
@@ -68,7 +70,7 @@ public enum State {
     AUTHED {
         @Override
         void process(StateProcessor processor, ChannelHandlerContext ctx, BinaryPacket binaryPacket) {
-
+            // ERROR,CMD,EOF
         }
     };
 
