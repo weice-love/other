@@ -30,7 +30,12 @@ docker restart <容器id>
 1. 创建从库用户
 CREATE USER 'slave'@'%' IDENTIFIED BY '123456';
 2. 授权（REPLICATION CLIENT（不知道什么用））
-GRANT REPLICATION SLAVE,  ON *.* TO 'slave'@'%';
+GRANT REPLICATION SLAVE,REPLICATION CLIENT  ON *.* TO 'slave'@'%';
+ps:
+	REPLICATION CLIENT:
+		复制用户可以使用 SHOW MASTER STATUS, SHOW SLAVE STATUS和 SHOW BINARY LOGS来         确定复制状态。
+	REPLICATION SLAVE:
+		复制才能真正地工作
 
 # 在master节点，查看状态，并记录下File,Position的值
 show master status;
