@@ -5,14 +5,19 @@ import cn.weicelove.constants.CharSetEnum;
 import cn.weicelove.util.SecurityUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 
 public class AuthPacket {
 
+    private static final Logger log = LoggerFactory.getLogger(AuthPacket.class);
+
     private static final byte[] FILLER = new byte[23];
-    private static final long MAX_PACKET_SIZE = 1024 * 1024 * 2;
+    private static final long MAX_PACKET_SIZE = 1024 * 1024 * 16;
 
     public byte packetId;
     public long clientFlags;
@@ -28,8 +33,9 @@ public class AuthPacket {
     private AuthPacket() {}
 
     public static AuthPacket writePacket(HandPacket handPacket) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+        log.info("start write auth packet...");
         AuthPacket authPacket = new AuthPacket();
-        authPacket.packetId = handPacket.packetId;
+        authPacket.packetId = 1;
         authPacket.clientFlags = getBasicCapability();
         authPacket.maxPacketSize = MAX_PACKET_SIZE;
         authPacket.charsetIndex = handPacket.serverCharsetIndex;
@@ -42,7 +48,9 @@ public class AuthPacket {
             byte[] seed = new byte[handPacket.authPluginDataPart1.length + handPacket.authPluginDataPart2.length];
             System.arraycopy(handPacket.authPluginDataPart1, 0, seed, 0, handPacket.authPluginDataPart1.length);
             System.arraycopy(handPacket.authPluginDataPart2, 0, seed, handPacket.authPluginDataPart1.length, handPacket.authPluginDataPart2.length);
+            log.debug("seed: {}", seed);
             authPacket.password = SecurityUtil.scramble411(authPacket.password, seed);
+            log.debug("password: {}", authPacket.password);
             authPacket.passwordLength = ((byte) authPacket.password.length);
         } else {
 
@@ -58,6 +66,7 @@ public class AuthPacket {
         if ((authPacket.clientFlags & CapabilityConstants.CLIENT_CONNECT_ATTRS ) > 0) {
 
         }
+        log.info("write auth packet success !!! data: {}", authPacket.toString());
         return authPacket;
     }
 
@@ -66,7 +75,7 @@ public class AuthPacket {
         flag |= CapabilityConstants.CLIENT_LONG_PASSWORD;
         flag |= CapabilityConstants.CLIENT_FOUND_ROWS;
         flag |= CapabilityConstants.CLIENT_LONG_FLAG;
-        // todo
+        // 需要带auth_plugin_name
         flag |= CapabilityConstants.CLIENT_PLUGIN_AUTH;
         flag |= CapabilityConstants.CLIENT_CONNECT_WITH_DB;
         flag |= CapabilityConstants.CLIENT_ODBC;
@@ -75,6 +84,17 @@ public class AuthPacket {
         flag |= CapabilityConstants.CLIENT_INTERACTIVE;
         flag |= CapabilityConstants.CLIENT_IGNORE_SIGPIPE;
         flag |= CapabilityConstants.CLIENT_SECURE_CONNECTION;
+
+//        flag |= CapabilityConstants.CLIENT_LONG_PASSWORD;
+//        flag |= CapabilityConstants.CLIENT_FOUND_ROWS;
+//        flag |= CapabilityConstants.CLIENT_LONG_FLAG;
+//        flag |= CapabilityConstants.CLIENT_ODBC;
+//        flag |= CapabilityConstants.CLIENT_IGNORE_SPACE;
+//        flag |= CapabilityConstants.CLIENT_PROTOCOL_41;
+//        flag |= CapabilityConstants.CLIENT_INTERACTIVE;
+//        flag |= CapabilityConstants.CLIENT_IGNORE_SIGPIPE;
+//        flag |= CapabilityConstants.CLIENT_SECURE_CONNECTION;
+
         return flag;
     }
 
@@ -128,5 +148,21 @@ public class AuthPacket {
         } else {
             return 9 + length;
         }
+    }
+
+    @Override
+    public String toString() {
+        return "AuthPacket{" +
+                "packetId=" + packetId +
+                ", clientFlags=" + clientFlags +
+                ", maxPacketSize=" + maxPacketSize +
+                ", charsetIndex=" + charsetIndex +
+                ", extra=" + Arrays.toString(extra) +
+                ", user='" + user + '\'' +
+                ", passwordLength=" + passwordLength +
+                ", password=" + Arrays.toString(password) +
+                ", database='" + database + '\'' +
+                ", authPluginName=" + Arrays.toString(authPluginName) +
+                '}';
     }
 }

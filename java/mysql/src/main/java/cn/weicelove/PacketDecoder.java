@@ -22,12 +22,12 @@ public class PacketDecoder extends ByteToMessageDecoder {
         }
         int packetBodyLength = ByteUtil.readUB3(in);
         byte packetId = in.readByte();
-        log.debug("bodyLength: {}, id: {}", packetBodyLength, packetId);
+        log.debug("接收到新包, bodyLength: {}, id: {}", packetBodyLength, packetId);
         // 做标记，读取到半包,可以回滚
         in.markReaderIndex();
         if (in.readableBytes() < packetBodyLength) {
             // 半包回溯
-            System.out.println("================半包回溯========================");
+            log.debug("packetId: {}, 半包回溯...", packetId);
             in.resetReaderIndex();
             return;
         }

@@ -28,6 +28,10 @@ public class MessageReader {
         return data[position++];
     }
 
+    public boolean hasNext() {
+        return position < length;
+    }
+
     public byte[] readStringUtilNull() {
         int endIndex = -1;
         for (int i = position; i <= length; i++) {

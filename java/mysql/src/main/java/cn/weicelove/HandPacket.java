@@ -1,10 +1,14 @@
 package cn.weicelove;
 
 import cn.weicelove.constants.CapabilityConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.charset.StandardCharsets;
 
 public class HandPacket {
+
+    private static final Logger log = LoggerFactory.getLogger(HandPacket.class);
 
 //    private BinaryPacket binaryPacket;
     public byte packetId;
@@ -21,8 +25,7 @@ public class HandPacket {
     public byte[] authPluginName;
 
     public void  parse(BinaryPacket binaryPacket) {
-        System.out.println("parse handshake.");
-
+        log.info("start parse handShake!!!");
         MessageReader messageReader = new MessageReader(binaryPacket.getPacketBodyLength(), binaryPacket.getData());
         packetId = binaryPacket.getPacketId();
         protocolVersion = messageReader.readByte();
@@ -44,7 +47,7 @@ public class HandPacket {
 //        if ((serverLowCapabilities & CapabilityConstants.CLIENT_PLUGIN_AUTH) > 0) {
             authPluginName = messageReader.readStringUtilNull();
 //        }
-        System.out.println("hand packet -> " + this.toString());
+        log.info("parse handShake success!!! data: {}", this.toString());
     }
 
     @Override
