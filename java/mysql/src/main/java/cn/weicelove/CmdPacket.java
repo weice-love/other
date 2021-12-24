@@ -25,7 +25,7 @@ public class CmdPacket {
     private CmdPacket() {}
 
     public static CmdPacket writePacket(byte commandType) throws UnsupportedEncodingException, NoSuchAlgorithmException {
-        log.info("start write auth packet...");
+        log.info("start write command packet...");
         CmdPacket authPacket = new CmdPacket();
         authPacket.packetId = 0;
         return null;
