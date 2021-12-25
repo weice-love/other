@@ -5,7 +5,9 @@ import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * <p> @author     :  清风
@@ -56,6 +58,14 @@ public enum State {
                     log.debug("statusFlag: {}, numWarns: {}, statusInfo: {}", statusFlag, numWarns, new String(statusInfo, StandardCharsets.UTF_8));
                 }
                 // todo 暂时请求一下
+                try {
+                    CmdPacket cmdPacket = CmdPacket.writePacket((byte) 3, "SHOW MASTER STATUS;");
+                    ByteBuf buffer = cmdPacket.transferByteBuf(ctx);
+                    log.info("cmd packet size: {}", buffer.readableBytes());
+                    ctx.writeAndFlush(buffer);
+                } catch (Exception e) {
+                    log.error("生成CmdPacket失败", e);
+                }
 
             } else if (header == 254 && binaryPacket.getPacketBodyLength() + 4 < 9) {
                 log.debug("EOF Packet");
@@ -71,6 +81,12 @@ public enum State {
         @Override
         void process(StateProcessor processor, ChannelHandlerContext ctx, BinaryPacket binaryPacket) {
             // ERROR,CMD,EOF
+            // 有可能是ok包，也有可能是error包
+            MessageReader messageReader = new MessageReader(binaryPacket.getPacketBodyLength(), binaryPacket.getData());
+            int header = messageReader.readByte() & 0xff;
+            log.info("Packet header: {}, length: {}", header , binaryPacket.getPacketBodyLength() + 4);
+            log.info("Packet data: {}", binaryPacket.getData());
+
         }
     };
 
