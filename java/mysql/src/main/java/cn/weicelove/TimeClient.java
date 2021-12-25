@@ -18,11 +18,9 @@ import java.util.concurrent.TimeUnit;
  */
 public class TimeClient {
 
-//    private static final int PORT = 3306;
     private static final int PORT = 33006;
 
     private static final String HOST = "192.168.75.128";
-//    private static final String HOST = "150.158.199.215";
 
     private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 

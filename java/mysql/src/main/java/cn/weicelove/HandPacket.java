@@ -1,6 +1,8 @@
 package cn.weicelove;
 
 import cn.weicelove.constants.CapabilityConstants;
+import cn.weicelove.util.ByteUtil;
+import jdk.nashorn.internal.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,16 +57,16 @@ public class HandPacket {
     public String toString() {
         return "HandPacket{" +
                 "protocolVersion=" + protocolVersion +
-                ", serverVersion=" + new String(serverVersion, StandardCharsets.UTF_8) +
+                ", serverVersion=" + ByteUtil.byte2StringWithUTF8(serverVersion) +
                 ", connectionId=" + connectionId +
-                ", authPluginDataPart1=" + new String(authPluginDataPart1, StandardCharsets.UTF_8) +
+                ", authPluginDataPart1=" + ByteUtil.byte2StringWithUTF8(authPluginDataPart1) +
                 ", serverLowCapabilities=" + serverLowCapabilities +
                 ", serverCharsetIndex=" + serverCharsetIndex +
                 ", serverStatus=" + serverStatus +
                 ", serverUpCapabilities=" + serverUpCapabilities +
                 ", authDataLength=" + authDataLength +
-                ", authPluginDataPart2=" + new String(authPluginDataPart2, StandardCharsets.UTF_8) +
-                ", authPluginName=" + new String(authPluginName, StandardCharsets.UTF_8) +
+                ", authPluginDataPart2=" + ByteUtil.byte2StringWithUTF8(authPluginDataPart2) +
+                ", authPluginName=" + ByteUtil.byte2StringWithUTF8(authPluginName) +
                 '}';
     }
 }

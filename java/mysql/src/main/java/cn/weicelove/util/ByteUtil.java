@@ -5,10 +5,21 @@ package cn.weicelove.util;
 
 import io.netty.buffer.ByteBuf;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+
 /**
  * @author lizhuyang
  */
 public class ByteUtil {
+
+    public static String byte2StringWithUTF8(byte[] data) {
+        return data == null ? null : new String(data, StandardCharsets.UTF_8);
+    }
+
+    public static String byte2String(byte[] data, Charset charset) {
+        return data == null ? null : new String(data, charset);
+    }
 
     public static byte readByte(ByteBuf data) {
         return data.readByte();

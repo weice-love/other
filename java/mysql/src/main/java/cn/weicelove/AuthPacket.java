@@ -40,11 +40,11 @@ public class AuthPacket {
         authPacket.maxPacketSize = MAX_PACKET_SIZE;
         authPacket.charsetIndex = handPacket.serverCharsetIndex;
         authPacket.extra = FILLER;
-        authPacket.user = "slave";
+        authPacket.user = "root";
         if ((authPacket.clientFlags & CapabilityConstants.CLIENT_PLUGIN_AUTH_LENENC_CLIENT_DATA) > 0) {
 
         } else if((authPacket.clientFlags & CapabilityConstants.CLIENT_SECURE_CONNECTION) > 0) {
-            authPacket.password = "123456".getBytes(CharSetEnum.valueOf(((int) handPacket.serverCharsetIndex)).getCharacterSetName());
+            authPacket.password = "abcdefg123".getBytes(CharSetEnum.valueOf(((int) handPacket.serverCharsetIndex)).getCharacterSetName());
             byte[] seed = new byte[handPacket.authPluginDataPart1.length + handPacket.authPluginDataPart2.length];
             System.arraycopy(handPacket.authPluginDataPart1, 0, seed, 0, handPacket.authPluginDataPart1.length);
             System.arraycopy(handPacket.authPluginDataPart2, 0, seed, handPacket.authPluginDataPart1.length, handPacket.authPluginDataPart2.length);
