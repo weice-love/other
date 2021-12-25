@@ -19,15 +19,13 @@ import java.util.concurrent.TimeUnit;
  */
 public class TimeClient {
 
-    private static final DataSourceConfig DATA_SOURCE_CONFIG = new DataSourceConfig("config.properties");
-
     private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 
     NioEventLoopGroup group = new NioEventLoopGroup();
 
     public static void main(String[] args) {
         try {
-            new TimeClient().connect(DATA_SOURCE_CONFIG.getHost(), DATA_SOURCE_CONFIG.getPort());
+            new TimeClient().connect(DataSourceConfig.getInstance().getHost(), DataSourceConfig.getInstance().getPort());
         } catch (InterruptedException e) {
             System.out.println("client error: " + e.getMessage());
         }
@@ -72,7 +70,7 @@ public class TimeClient {
                 try {
                     TimeUnit.SECONDS.sleep(5);
                     // 发起重连操作
-                    connect(DATA_SOURCE_CONFIG.getHost(), DATA_SOURCE_CONFIG.getPort());
+                    connect(DataSourceConfig.getInstance().getHost(), DataSourceConfig.getInstance().getPort());
                 } catch (Exception e) {
                     System.out.println("client 重连失败: " + e.getMessage());
                 }

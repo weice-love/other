@@ -1,5 +1,6 @@
 package cn.weicelove;
 
+import cn.weicelove.config.DataSourceConfig;
 import cn.weicelove.constants.CapabilityConstants;
 import cn.weicelove.constants.CharSetEnum;
 import cn.weicelove.util.SecurityUtil;
@@ -40,11 +41,11 @@ public class AuthPacket {
         authPacket.maxPacketSize = MAX_PACKET_SIZE;
         authPacket.charsetIndex = handPacket.serverCharsetIndex;
         authPacket.extra = FILLER;
-        authPacket.user = "root";
+        authPacket.user = DataSourceConfig.getInstance().getUser();
         if ((authPacket.clientFlags & CapabilityConstants.CLIENT_PLUGIN_AUTH_LENENC_CLIENT_DATA) > 0) {
 
         } else if((authPacket.clientFlags & CapabilityConstants.CLIENT_SECURE_CONNECTION) > 0) {
-            authPacket.password = "abcdefg123".getBytes(CharSetEnum.valueOf(((int) handPacket.serverCharsetIndex)).getCharacterSetName());
+            authPacket.password = DataSourceConfig.getInstance().getPassword().getBytes(CharSetEnum.valueOf(((int) handPacket.serverCharsetIndex)).getCharacterSetName());
             byte[] seed = new byte[handPacket.authPluginDataPart1.length + handPacket.authPluginDataPart2.length];
             System.arraycopy(handPacket.authPluginDataPart1, 0, seed, 0, handPacket.authPluginDataPart1.length);
             System.arraycopy(handPacket.authPluginDataPart2, 0, seed, handPacket.authPluginDataPart1.length, handPacket.authPluginDataPart2.length);
@@ -58,7 +59,7 @@ public class AuthPacket {
         }
 
         if ((authPacket.clientFlags & CapabilityConstants.CLIENT_CONNECT_WITH_DB) > 0) {
-            authPacket.database = "work";
+            authPacket.database = DataSourceConfig.getInstance().getDatabase();
         }
         if ((authPacket.clientFlags & CapabilityConstants.CLIENT_PLUGIN_AUTH) > 0) {
             authPacket.authPluginName = handPacket.authPluginName;
