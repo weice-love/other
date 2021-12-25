@@ -1,5 +1,6 @@
 package cn.weicelove;
 
+import cn.weicelove.config.DataSourceConfig;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -18,9 +19,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class TimeClient {
 
-    private static final int PORT = 33006;
-
-    private static final String HOST = "192.168.75.128";
+    private static final DataSourceConfig DATA_SOURCE_CONFIG = new DataSourceConfig("config.properties");
 
     private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 
@@ -28,7 +27,7 @@ public class TimeClient {
 
     public static void main(String[] args) {
         try {
-            new TimeClient().connect(HOST, PORT);
+            new TimeClient().connect(DATA_SOURCE_CONFIG.getHost(), DATA_SOURCE_CONFIG.getPort());
         } catch (InterruptedException e) {
             System.out.println("client error: " + e.getMessage());
         }
@@ -73,7 +72,7 @@ public class TimeClient {
                 try {
                     TimeUnit.SECONDS.sleep(5);
                     // 发起重连操作
-                    connect(HOST, PORT);
+                    connect(DATA_SOURCE_CONFIG.getHost(), DATA_SOURCE_CONFIG.getPort());
                 } catch (Exception e) {
                     System.out.println("client 重连失败: " + e.getMessage());
                 }

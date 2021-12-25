@@ -3,6 +3,7 @@ package cn.weicelove.config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -17,12 +18,17 @@ public class DataSourceConfig {
     private String password;
     private String database;
 
-    public DataSourceConfig(String filename) throws IOException {
+    public DataSourceConfig(String filename) {
 
         log.info("init datasource config...");
         Properties properties = new Properties();
         InputStream inputStream = ClassLoader.getSystemResourceAsStream(filename);
-        properties.load(inputStream);
+        try {
+            properties.load(inputStream);
+        } catch (IOException e) {
+            log.error("配置文件读取失败!!!", e);
+            throw new RuntimeException("配置文件读取失败!!!");
+        }
         this.database = properties.getProperty("database");
         this.password = properties.getProperty("password");
         this.user = properties.getProperty("user");
@@ -53,10 +59,6 @@ public class DataSourceConfig {
     }
 
     public static void main(String[] args) {
-        try {
-            DataSourceConfig dataSourceConfig = new DataSourceConfig("config.properties");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        DataSourceConfig dataSourceConfig = new DataSourceConfig("config.properties");
     }
 }
