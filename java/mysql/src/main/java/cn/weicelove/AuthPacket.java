@@ -77,7 +77,7 @@ public class AuthPacket {
         flag |= CapabilityConstants.CLIENT_FOUND_ROWS;
         flag |= CapabilityConstants.CLIENT_LONG_FLAG;
         // 需要带auth_plugin_name
-        flag |= CapabilityConstants.CLIENT_PLUGIN_AUTH;
+//        flag |= CapabilityConstants.CLIENT_PLUGIN_AUTH;
         flag |= CapabilityConstants.CLIENT_CONNECT_WITH_DB;
         flag |= CapabilityConstants.CLIENT_ODBC;
         flag |= CapabilityConstants.CLIENT_IGNORE_SPACE;
@@ -134,7 +134,7 @@ public class AuthPacket {
         size += (user == null) ? 1 : user.length() + 1;
         size += (password == null) ? 1 : getLength(password);
         size += (database == null) ? 1 : database.length() + 1;
-        size += (authPluginName == null) ? 1 : authPluginName.length + 1;
+        size += (authPluginName == null) ? 0 : authPluginName.length + 1;
         return size;
     }
 

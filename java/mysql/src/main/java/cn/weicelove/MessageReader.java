@@ -51,6 +51,9 @@ public class MessageReader {
     }
 
     public byte[] readStringFixLength(int length) {
+        if (length == 0) {
+            return new byte[0];
+        }
         byte[] content = new byte[length];
         System.arraycopy(data, position, content, 0, content.length);
         position += length;
@@ -86,6 +89,13 @@ public class MessageReader {
         return i;
     }
 
+    public int readUB3() {
+        int i = data[position++] & 0xff;
+        i |= (data[position++] & 0xff) << 8;
+        i |= (data[position++] & 0xff) << 16;
+        return i;
+    }
+
     public void skip(int step) {
         position += step;
     }
@@ -94,5 +104,17 @@ public class MessageReader {
         byte[] content = new byte[length - position];
         System.arraycopy(data, position, content , 0, length - position);
         return content;
+    }
+
+    public long readUB8() {
+        long l = data[position++] & 0xff;
+        l |= (long) (data[position++] & 0xff) << 8;
+        l |= (long) (data[position++] & 0xff) << 16;
+        l |= (long) (data[position++] & 0xff) << 24;
+        l |= (long) (data[position++] & 0xff) << 32;
+        l |= (long) (data[position++] & 0xff) << 40;
+        l |= (long) (data[position++] & 0xff) << 48;
+        l |= (long) (data[position++] & 0xff) << 56;
+        return l;
     }
 }

@@ -5,9 +5,7 @@ import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
-import java.security.NoSuchAlgorithmException;
 
 /**
  * <p> @author     :  清风
@@ -47,7 +45,7 @@ public enum State {
                         new String(sqlState, StandardCharsets.UTF_8),
                         new String(msg, StandardCharsets.UTF_8));
             } else if (header == 0 && binaryPacket.getPacketBodyLength() + 4 > 7){
-                log.debug("OK Packet");
+                log.debug("认证成功!!! OK Packet");
                 byte affectedRow = messageReader.readByte();
                 byte lastInsertId = messageReader.readByte();
                 log.debug("affectedRow: {}, lastInsertId: {}", affectedRow, lastInsertId);
@@ -86,9 +84,67 @@ public enum State {
             int header = messageReader.readByte() & 0xff;
             log.info("Packet header: {}, length: {}", header , binaryPacket.getPacketBodyLength() + 4);
             log.info("Packet data: {}", binaryPacket.getData());
+            if (header == 0) {
+
+            } else if(header == 0xff) {
+
+            } else if(header == 0xfb) {
+                log.debug("command packet response 返回0xfb");
+            } else if(header == 0xfe) {
+                log.debug("EOF Packet");
+                int warnings = messageReader.readUB2();
+                int statusFlag = messageReader.readUB2();
+                log.debug("warnings: {}, statusFlag: {}", warnings, statusFlag);
+            } else {
+                log.debug("解析command packet response...");
+                int column = header;
+                log.info("column: {}", column);
+                processor.setState(RECEIVE_COLUMN);
+            }
+
 
         }
-    };
+    },
+    RECEIVE_COLUMN {
+        @Override
+        void process(StateProcessor processor, ChannelHandlerContext ctx, BinaryPacket binaryPacket) {
+
+            MessageReader messageReader = new MessageReader(binaryPacket.getPacketBodyLength(), binaryPacket.getData());
+            int header = messageReader.readByte() & 0xff;
+            log.info("Packet header: {}, length: {}", header , binaryPacket.getPacketBodyLength() + 4);
+            log.info("Packet data: {}", binaryPacket.getData());
+             if(header == 0xfe) {
+                log.debug("EOF Packet");
+                int warnings = messageReader.readUB2();
+                int statusFlag = messageReader.readUB2();
+                log.debug("warnings: {}, statusFlag: {}", warnings, statusFlag);
+                processor.setState(RECEIVE_ROW);
+                return;
+            }
+            log.debug("解析 column definition....");
+            ColumnDefinitionPacket columnDefinitionPacket = new ColumnDefinitionPacket();
+            columnDefinitionPacket.parse(binaryPacket);
+
+        }
+    },
+    RECEIVE_ROW {
+        @Override
+        void process(StateProcessor processor, ChannelHandlerContext ctx, BinaryPacket binaryPacket) {
+            MessageReader messageReader = new MessageReader(binaryPacket.getPacketBodyLength(), binaryPacket.getData());
+            int header = messageReader.readByte() & 0xff;
+            log.info("Packet header: {}, length: {}", header , binaryPacket.getPacketBodyLength() + 4);
+            log.info("Packet data: {}", binaryPacket.getData());
+            if(header == 0xfe) {
+                log.debug("EOF Packet");
+                int warnings = messageReader.readUB2();
+                int statusFlag = messageReader.readUB2();
+                log.debug("warnings: {}, statusFlag: {}", warnings, statusFlag);
+                processor.setState(AUTHED);
+            }
+            log.debug("解析 row....");
+        }
+    },
+    ;
 
     private static final Logger log = LoggerFactory.getLogger(State.class);
 
