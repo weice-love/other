@@ -1,60 +1,30 @@
 package cn.weicelove;
 
+import cn.weicelove.constants.CharSetEnum;
 import cn.weicelove.util.ByteUtil;
+import io.netty.buffer.ByteBuf;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class RowPacket {
 
     private static final Logger log = LoggerFactory.getLogger(RowPacket.class);
 
-    public byte[] catalog;
-    public byte[] schema;
-    public byte[] table;
-    public byte[] orgTable;
-    public byte[] name;
-    public byte[] orgName;
-    public int fieldsCount;
-    public int charset;
-    public long columnLength;
-    public byte type;
-    public int flags;
-    public byte decimals;
-    public byte filler_1;
-    public byte filler_2;
+    public List<byte[]> rows = new ArrayList<>();
 
     public void  parse(BinaryPacket binaryPacket) {
         log.info("start parse column definition packet!!!");
         MessageReader messageReader = new MessageReader(binaryPacket.getPacketBodyLength(), binaryPacket.getData());
-        catalog = readLenStr(messageReader);
-        schema = readLenStr(messageReader);
-        table = readLenStr(messageReader);
-        orgTable = readLenStr(messageReader);
-        name = readLenStr(messageReader);
-        orgName = readLenStr(messageReader);
-        fieldsCount = readLenInt(messageReader);
-        charset = messageReader.readUB2();
-        columnLength = messageReader.readUB4();
-        type = messageReader.readByte();
-        flags = messageReader.readUB2();
-        decimals = messageReader.readByte();
-        filler_1 = messageReader.readByte();
-        filler_2 = messageReader.readByte();
-
-        log.info("parse column definition success!!! data: {}", this.toString());
-    }
-
-    private int readLenInt(MessageReader messageReader) {
-        int value = messageReader.readByte() & 0xff;
-        if (value < 0xfc) {
-            return value;
-        } else if (value == 0xfc) {
-            return messageReader.readUB2();
-        } else if (value == 0xfd) {
-            return messageReader.readUB3();
-        } else {
-            return (int)messageReader.readUB8();
+        while (messageReader.hasNext()) {
+            byte[] bytes = readLenStr(messageReader);
+            rows.add(bytes);
         }
+        log.info("parse row success!!! data: {}", this.toString());
     }
 
     private byte[] readLenStr(MessageReader messageReader) {
@@ -72,21 +42,12 @@ public class RowPacket {
 
     @Override
     public String toString() {
-        return "ColumnDefinitionPacket{" +
-                "catalog=" + ByteUtil.byte2StringWithUTF8(catalog) +
-                ", schema=" + ByteUtil.byte2StringWithUTF8(schema) +
-                ", table=" + ByteUtil.byte2StringWithUTF8(table) +
-                ", orgTable=" + ByteUtil.byte2StringWithUTF8(orgTable) +
-                ", name=" + ByteUtil.byte2StringWithUTF8(name) +
-                ", orgName=" + ByteUtil.byte2StringWithUTF8(orgName) +
-                ", fieldsCount=" + fieldsCount +
-                ", charset=" + charset +
-                ", columnLength=" + columnLength +
-                ", type=" + type +
-                ", flags=" + flags +
-                ", decimals=" + decimals +
-                ", filler_1=" + filler_1 +
-                ", filler_2=" + filler_2 +
-                '}';
+        StringBuilder builder = new StringBuilder();
+        builder.append("\nRowPacket{\n");
+        for (int i = 0; i < rows.size(); i++) {
+               builder.append("rows(" +i+")=" + ByteUtil.byte2String(rows.get(i), CharSetEnum.latin1.getCharacterSetName()) + '\n');
+        }
+        builder.append('}');
+        return builder.toString();
     }
 }

@@ -132,16 +132,19 @@ public enum State {
         void process(StateProcessor processor, ChannelHandlerContext ctx, BinaryPacket binaryPacket) {
             MessageReader messageReader = new MessageReader(binaryPacket.getPacketBodyLength(), binaryPacket.getData());
             int header = messageReader.readByte() & 0xff;
-            log.info("Packet header: {}, length: {}", header , binaryPacket.getPacketBodyLength() + 4);
-            log.info("Packet data: {}", binaryPacket.getData());
+            log.info("Row Packet header: {}, length: {}", header , binaryPacket.getPacketBodyLength() + 4);
+            log.info("Row Packet data: {}", binaryPacket.getData());
             if(header == 0xfe) {
                 log.debug("EOF Packet");
                 int warnings = messageReader.readUB2();
                 int statusFlag = messageReader.readUB2();
                 log.debug("warnings: {}, statusFlag: {}", warnings, statusFlag);
                 processor.setState(AUTHED);
+                return;
             }
             log.debug("解析 row....");
+            RowPacket rowPacket = new RowPacket();
+            rowPacket.parse(binaryPacket);
         }
     },
     ;

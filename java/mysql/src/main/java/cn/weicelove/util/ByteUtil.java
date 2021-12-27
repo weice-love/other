@@ -5,6 +5,7 @@ package cn.weicelove.util;
 
 import io.netty.buffer.ByteBuf;
 
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
@@ -19,6 +20,15 @@ public class ByteUtil {
 
     public static String byte2String(byte[] data, Charset charset) {
         return data == null ? null : new String(data, charset);
+    }
+
+    public static String byte2String(byte[] data, String charsetName) {
+        try {
+            return data == null ? null : new String(data, charsetName);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public static byte readByte(ByteBuf data) {
