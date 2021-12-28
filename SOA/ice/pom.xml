@@ -10,6 +10,7 @@
     <modules>
         <module>ice-config</module>
         <module>ice-service</module>
+        <module>ice-entity</module>
     </modules>
 
     <name>ice</name>
