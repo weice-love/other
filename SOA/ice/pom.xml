@@ -11,6 +11,7 @@
         <module>ice-config</module>
         <module>ice-service</module>
         <module>ice-entity</module>
+        <module>ice-common</module>
     </modules>
 
     <name>ice</name>
@@ -23,10 +24,19 @@
         <jdk.version>1.8</jdk.version>
         <mybatis-plus.version>3.1.2</mybatis-plus.version>
         <spring-boot-dependencies.version>2.2.10.RELEASE</spring-boot-dependencies.version>
+        <spring-dependencies.version>5.2.9.RELEASE</spring-dependencies.version>
+        <ice-common>1.0.0-SNAPSHOT</ice-common>
     </properties>
 
     <dependencyManagement>
+
         <dependencies>
+            <dependency>
+                <groupId>cn.weicelove</groupId>
+                <artifactId>ice-common</artifactId>
+                <version>${ice-common}</version>
+            </dependency>
+
             <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-boot-starter</artifactId>
@@ -39,6 +49,12 @@
                 <version>${spring-boot-dependencies.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-jdbc</artifactId>
+                <version>${spring-dependencies.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

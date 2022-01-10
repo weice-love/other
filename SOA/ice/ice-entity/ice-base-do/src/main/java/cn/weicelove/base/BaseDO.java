@@ -44,6 +44,7 @@ public class BaseDO implements Serializable {
     private Integer deleted;
 
 
+
     /**
      * 乐观锁
      */
