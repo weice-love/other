@@ -23,9 +23,11 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <jdk.version>1.8</jdk.version>
         <mybatis-plus.version>3.1.2</mybatis-plus.version>
-        <spring-boot-dependencies.version>2.2.10.RELEASE</spring-boot-dependencies.version>
+        <spring-boot-dependencies.version>2.6.2</spring-boot-dependencies.version>
         <spring-dependencies.version>5.2.9.RELEASE</spring-dependencies.version>
-        <ice-common>1.0.0-SNAPSHOT</ice-common>
+        <mysql.connect.verson>8.0.27</mysql.connect.verson>
+        <ice-common.version>1.0.0-SNAPSHOT</ice-common.version>
+        <ice-config.version>1.0.0-SNAPSHOT</ice-config.version>
     </properties>
 
     <dependencyManagement>
@@ -34,13 +36,26 @@
             <dependency>
                 <groupId>cn.weicelove</groupId>
                 <artifactId>ice-common</artifactId>
-                <version>${ice-common}</version>
+                <version>${ice-common.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.weicelove</groupId>
+                <artifactId>ice-config</artifactId>
+                <version>${ice-config.version}</version>
+                <type>pom</type>
             </dependency>
 
             <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-boot-starter</artifactId>
                 <version>${mybatis-plus.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql.connect.verson}</version>
             </dependency>
 
             <dependency>
