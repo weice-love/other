@@ -5,14 +5,15 @@ import cn.weicelove.common.SpringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
 
+@DependsOn("springUtil")
 @Component
 public class DynamicDataSource extends AbstractRoutingDataSource {
 
@@ -45,8 +46,8 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
     public void afterPropertiesSet() {
         Map<Object, Object> dataSource = new HashMap<>();
         dataSource.put("write", writeDataSource);
-        for (Integer i = 0; i < slaveNum; i++) {
-            String slaveName = "read-slave" + String.format("%02d", i);
+        for (Integer i = 1; i <= slaveNum; i++) {
+            String slaveName = String.format("read-slave%02d-datasource", i);
             dataSource.put(slaveName, SpringUtil.getBean(slaveName, DataSource.class));
         }
         setTargetDataSources(dataSource);
