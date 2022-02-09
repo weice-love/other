@@ -80,5 +80,38 @@
 
 ​	支持使用JUnit和TestNG对Spring组件进行测试
 
+### Spring核心类介绍
+
+1. DefaultListableBeanFactory
+
+是整个bean加载的核心部分，是Spring注册及加载bean的默认实现
+
+​	![DefaultListableBeanFactory层次结构图](.\Spring\DefaultListableBeanFactory层次结构图.jpg)
+-	AliasRegistry: 定义对alias的简单增删改等操作
+-	SimpleAliasRegistry: 主要使用map作为alias的缓存，并对接口AliasRegistry进行实现
+-	SingletonBeanRegistry: 定义对单类的注册及获取
+-	BeanFactory: 定义获取bean及bean的各种属性
+-	DefaultSingletonBeanRegistry: 对接口SingletonBeanRegistry各函数的实现
+-	HierarchicalBeanFactory: 继承BeanFactory,也就是在BeanFactory定义的功能的基础上增加了对parentFactory的支持
+-	BeanDefinitionRegistry: 定义对BeanDefinition的各种增删改等操作
+-	FactoryBeanRegistrySupport：在DefaultSingletonBeanRegistry基础上增加了对FactoryBean的特殊处理功能
+-	ConfigurableBeanFactory：提供配置 Factory 的各种方法
+-	ListableBeanFactory：根据各种条件获取 bean 的配置清单
+-	AbstractBeanFactory：综合 FactoryBeanRegistrySupport ConfigurableBeanFactory功能
+-	AutowireCapableBeanFactory：提供创建 bean 、自动注入、初始化以及应用 bean 的后处理器
+-	AbstractAutowireCapableBeanFactory：综合 abstractBeanFactory 并对接口 AutowireCapableBeanFactory 进行实现
+-	ConfigurableListableBeanFactory: Beanfactory 配置清单，指定忽略类型及接口等
+-	DefaultListableBeanFactory: 综合上面所有功能，要是对 bean 注册后的处理
+
+2. XmlBeanDefinitionReader
+
+XML配置文件的读取
+-	ResourceLoader：定义资源加载器，主要应用于根据给定的资源文件地址返回对应的Resource
+-	BeanDefinitionReader：主要定义资源文件读取并转换为 BeanDefinition 的各个功能
+-	EnvironmentCapable：定义获取 Environment 方法
+-	DocumentLoader：定义从资源、文件加载到转换为 Document 的功能
+-	AbstractBeanDefinitionReader：对EnvironmentCapable, BeanDefinitionReader 类定义的功能进行实现
+-	BeanDefinitionDocumentReader：定义读取 Docuemnt 并注册 BeanDefinition 功能
+-	BeanDefinitionParserDelegate：定义解析 Element 的各种方法
 ​	
 
