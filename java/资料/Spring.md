@@ -2,7 +2,7 @@
 
 ### Spring架构图
 
-​	![Spring架构](C:\Users\EDZ\Downloads\Spring架构.jpg)
+​	![Spring架构](.\Spring\Spring架构.jpg)
 
 #### Core Container
 
@@ -82,7 +82,7 @@
 
 ### Spring核心类介绍
 
-1. DefaultListableBeanFactory
+1. **DefaultListableBeanFactory**
 
 是整个bean加载的核心部分，是Spring注册及加载bean的默认实现
 
@@ -103,7 +103,7 @@
 -	ConfigurableListableBeanFactory: Beanfactory 配置清单，指定忽略类型及接口等
 -	DefaultListableBeanFactory: 综合上面所有功能，要是对 bean 注册后的处理
 
-2. XmlBeanDefinitionReader
+2. **XmlBeanDefinitionReader**
 
 XML配置文件的读取
 -	ResourceLoader：定义资源加载器，主要应用于根据给定的资源文件地址返回对应的Resource
@@ -114,4 +114,24 @@ XML配置文件的读取
 -	BeanDefinitionDocumentReader：定义读取 Docuemnt 并注册 BeanDefinition 功能
 -	BeanDefinitionParserDelegate：定义解析 Element 的各种方法
 ​	
+
+### Spring标签解析
+
+#### 1.默认标签
+
+- import
+- alias
+- bean
+- beans
+
+**bean解析流程**
+
+1. 委托BeanDefinitionDelegate类的parseBeanDefinitionElement方法进行元素解析，返回BeanDefinitionHolder类型的实例bdHolder，经过这个方法后，bdHolder实例已经包含我们配置文件中配置的各种属性，例如class，name，id，alias之类的属性
+2. 对存在默认标签的子节点下的自定义属性进行解析
+3. 委托DefinitionReaderUtils的registerBeanDefinition对bdHolder进行注册
+4. 发送事件，通知相关监听器，该bena已完成加载
+
+#### 2.自定义标签
+
+
 
