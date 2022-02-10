@@ -133,5 +133,15 @@ XML配置文件的读取
 
 #### 2.自定义标签
 
+拓展Spring自定义标签配置步骤
+
+1. 创建一个需要拓展的组件
+2. 定义一个XSD文件描述组件内容
+3. 创建一个文件，实现BeanDefinitionParser接口，用来解析XSD文件中的定义和组件定义
+4. 创建一个Handler文件，拓展自NamespaceHandlerSupport,目的是将组件注册到Spring容器
+5. 编写spring.handlers和spring.schemas
+
+
+
 
 
