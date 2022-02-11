@@ -3,5 +3,9 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="myTestBean" class="org.example.entity.MyTestBean" />
+    <bean id="myTestBean" class="org.example.entity.MyTestBean" >
+        <!-- 额外声明，并不影响属性值，在beanDefinition的getAttribute中获取 -->
+        <meta key="testStr" value="aaaaa"/>
+
+    </bean>
 </beans>
