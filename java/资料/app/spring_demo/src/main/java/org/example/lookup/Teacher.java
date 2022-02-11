@@ -1,4 +1,4 @@
-package org.example.entity;
+package org.example.lookup;
 
 /**
  * <p> @author     :  清风

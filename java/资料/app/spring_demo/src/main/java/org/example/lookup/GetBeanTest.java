@@ -1,6 +1,6 @@
-package org.example.service;
+package org.example.lookup;
 
-import org.example.entity.User;
+import org.example.lookup.User;
 
 /**
  * <p> @author     :  清风
