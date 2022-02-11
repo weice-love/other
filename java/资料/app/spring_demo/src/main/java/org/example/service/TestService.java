@@ -2,6 +2,7 @@ package org.example.service;
 
 import org.example.entity.MyTestBean;
 import org.example.lookup.GetBeanTest;
+import org.example.replace.TestChangeMethod;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.core.io.ClassPathResource;
@@ -16,6 +17,17 @@ public class TestService {
 
     public static void main(String[] args) {
 //        getBean();
+//        lookupTest();
+//        replaceTest();
+    }
+
+    private static void replaceTest() {
+        BeanFactory beanFactory = new XmlBeanFactory(new ClassPathResource("replaceTest.xml"));
+        TestChangeMethod testChangeMethod = (TestChangeMethod) beanFactory.getBean("testChangeMethod");
+        testChangeMethod.changeMe();
+    }
+
+    private static void lookupTest() {
         BeanFactory beanFactory = new XmlBeanFactory(new ClassPathResource("lookUpTest.xml"));
         GetBeanTest getBeanTest = (GetBeanTest) beanFactory.getBean("getBeanTest");
         getBeanTest.showMe();
