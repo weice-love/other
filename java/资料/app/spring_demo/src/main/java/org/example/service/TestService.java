@@ -1,6 +1,7 @@
 package org.example.service;
 
 import org.example.entity.MyTestBean;
+import org.example.label.Person;
 import org.example.lookup.GetBeanTest;
 import org.example.replace.TestChangeMethod;
 import org.springframework.beans.factory.BeanFactory;
@@ -19,6 +20,9 @@ public class TestService {
 //        getBean();
 //        lookupTest();
 //        replaceTest();
+        BeanFactory beanFactory = new XmlBeanFactory(new ClassPathResource("personTest.xml"));
+        Person testBean = (Person) beanFactory.getBean("testBean");
+        System.out.println("name: " + testBean.getUserName() + ", email: " + testBean.getEmail());
     }
 
     private static void replaceTest() {

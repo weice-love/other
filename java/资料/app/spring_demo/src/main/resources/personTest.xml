@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:myname="http://weicelove.cn/schema/person"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://weicelove.cn/schema/person http://weicelove.cn/schema/person.xsd">
+
+    <myname:person id="testBean" email="xxx@xxx.com" userName="lisi" />
+</beans>
