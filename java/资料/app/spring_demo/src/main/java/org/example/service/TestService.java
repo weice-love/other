@@ -14,9 +14,15 @@ public class TestService {
 
 
     public static void main(String[] args) {
+//        getBean();
+        BeanFactory beanFactory = new XmlBeanFactory(new ClassPathResource("lookUpTest.xml"));
+        GetBeanTest getBeanTest = (GetBeanTest) beanFactory.getBean("getBeanTest");
+        getBeanTest.showMe();
+    }
+
+    private static void getBean() {
         BeanFactory beanFactory = new XmlBeanFactory(new ClassPathResource("beanFactoryTest.xml"));
         MyTestBean myTestBean = (MyTestBean) beanFactory.getBean("myTestBean");
         System.out.println(myTestBean.getTestStr());
-
     }
 }
