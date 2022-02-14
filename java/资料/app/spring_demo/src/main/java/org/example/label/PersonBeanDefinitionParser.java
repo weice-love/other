@@ -20,14 +20,14 @@ public class PersonBeanDefinitionParser extends AbstractSingleBeanDefinitionPars
 
     @Override
     protected void doParse(Element element, BeanDefinitionBuilder builder) {
-        String id = element.getAttribute("id");
+//        String id = element.getAttribute("id");
+//        if (StringUtils.hasText(id)) {
+//            builder.addPropertyValue("id", id);
+//        }
         String userName = element.getAttribute("userName");
         String email = element.getAttribute("email");
         if (StringUtils.hasText(userName)) {
             builder.addPropertyValue("userName", userName);
-        }
-        if (StringUtils.hasText(id)) {
-            builder.addPropertyValue("id", id);
         }
         if (StringUtils.hasText(email)) {
             builder.addPropertyValue("email", email);

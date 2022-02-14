@@ -22,7 +22,7 @@ public class TestService {
 //        replaceTest();
         BeanFactory beanFactory = new XmlBeanFactory(new ClassPathResource("personTest.xml"));
         Person testBean = (Person) beanFactory.getBean("testBean");
-        System.out.println("name: " + testBean.getUserName() + ", email: " + testBean.getEmail());
+        System.out.println("name: " + testBean.getUserName() + ", email: " + testBean.getEmail() + ", id: ");
     }
 
     private static void replaceTest() {
