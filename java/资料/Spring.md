@@ -141,7 +141,281 @@ XML配置文件的读取
 4. 创建一个Handler文件，拓展自NamespaceHandlerSupport,目的是将组件注册到Spring容器
 5. 编写spring.handlers和spring.schemas
 
+### Bean的加载
+
+##### 1.转换对应beanName
+
+- 去除FactoryBean的修饰符，也就是如果name=“&aa”，那么就会去除“&”
+- 取指定alias所表示的最终beanName
+
+##### 2.尝试从缓存中加载单例
+
+- 单例只会创建一次，后续再获取bean，就直接从缓存中获取
+- 缓存中不存在，从singletonFactories中加载（单例bean会存在依赖注入的问题，会提早曝光bean 的ObjectFactory，下一个bean需要使用的时候，直接使用ObjectFactory）。
+
+##### 3.bean的实例化
+
+- 从缓存中获取的是bean的原始状态，需要工厂bean中定义的factory-method方法中返回的bean，具体方法getObjectForBeanInstance
+
+##### 4.原型模式的依赖检查
+
+- 只有再单例情况下才会尝试解决循环依赖（A->B,B->A,A还未创建完，去创建B，B又依赖A，又去创建A，出现循环依赖）。使用isPrototyp CurrentlyinCreation(beanName）判断是否是原型模式。
+
+##### 5.检测parentFactory
+
+- xml配置中没有当前bean的信息，只能从父工厂中去加载当前的bean
+
+##### 6.将存储XML配置文件的GernericBeanDefinition转换成RootBeanDefinition
+
+- 加载Bean都是针对RootBeanDefinition，所以需要转换，如果父类bean不为空，还需要合并父类属性
+
+##### 7.寻找依赖
+
+- 初始化一个bean的时候会初始化这个bean所对应的依赖（@DependOn）
+
+##### 8.针对不同的scope进行bean的创建
+
+- 根据不同的配置进行不同的初始化策略
+
+##### 9.类型转换
+
+- 根据requireType来进行类型转换，可以用户自定义
+
+#### FactoryBean的使用
+
+**bean的实例化方式**
+
+1. <bean>中提供配置<property>
+
+   优点: 简单，易配置
+
+   缺点: 在需要大量配置情况下会比较复杂
+
+2. 利用FactoryBean进行bean的实例化
+
+   优点：可以自定义实例化
+
+   缺点：复杂，需要自己实现FactoryBean代码
+
+```
+package rg Springframew k.beans factory ; 
+public interface FactoryBean<T> { 
+	/*
+		返回由 FactoryBean 创建的 bean 实例，如果isSington（）返回 true ，则
+		该实例会放到 Spring容器中单实例缓存池中
+		
+		当<bean>配置文件中的class配置的是FactoryBean类时，
+		getBean() 返回的的是getObject()
+	*/
+	T getObject () throws Exception ;
+    /*
+    	返回由 FactoryBean 创建的 bean 实例的作用域是singleton还是prototype
+    */
+	Class<?> getObjectType (); 
+	/*
+		返回 FactoryBean创建的 bean 类型
+	*/
+	boolean isSingleton() ; 
+}
+
+-- 配置文件
+<bean id="XXX" class="XXXFactoryBean " <属性>="xxx" /＞
+
+-- 使用
+
+getBean(XXX) 获取bean实例
+getBean(&XXX)获取factorybean实例
+
+
+```
 
 
 
+#### 缓存中获取单例bean
 
+```
+protected Object getSingleton(String beanName, boolean allowEarlyReference) {
+		// Quick check for existing instance without full singleton lock
+		Object singletonObject = this.singletonObjects.get(beanName);
+		if (singletonObject == null && isSingletonCurrentlyInCreation(beanName)) {
+			singletonObject = this.earlySingletonObjects.get(beanName);
+			if (singletonObject == null && allowEarlyReference) {
+				synchronized (this.singletonObjects) {
+					// Consistent creation of early reference within full singleton lock
+					singletonObject = this.singletonObjects.get(beanName);
+					if (singletonObject == null) {
+						singletonObject = this.earlySingletonObjects.get(beanName);
+						if (singletonObject == null) {
+							ObjectFactory<?> singletonFactory = this.singletonFactories.get(beanName);
+							if (singletonFactory != null) {
+								singletonObject = singletonFactory.getObject();
+								this.earlySingletonObjects.put(beanName, singletonObject);
+								this.singletonFactories.remove(beanName);
+							}
+						}
+					}
+				}
+			}
+		}
+		return singletonObject;
+	}
+	
+	
+	
+Map<String, Object> singletonObjects
+	用于保存beanName和bean 的关系
+Map<String, Object> earlySingletonObjects
+	也是用于保存beanName和bean 的关系，当一个bean放入这里，当bean还在创建过程中，就可以通过getBean获取		到了
+Map<String, ObjectFactory<?>> singletonFactories
+	用于保存beanName和创建bean 的工厂之间的关系
+Set<String> registeredSingletons
+	用于保存已注册的bena
+```
+
+
+
+#### 从bean的实例中获取对象
+
+getObjectForBeanInstance
+
+1. 对FactoryBean 的正确性的验证
+2. 对非FactoryBean不做任何处理
+3. 对bean进行转换
+4. 将从Factory中解析bena的工作委托给getObjectFromFactoryBean
+
+```
+protected Object getObjectForBeanInstance(
+			Object beanInstance, String name, String beanName, @Nullable RootBeanDefinition mbd) {
+
+		// 是否是工厂bean， 以&打头，如果是，则直接返回工厂bean
+		if (BeanFactoryUtils.isFactoryDereference(name)) {
+			if (beanInstance instanceof NullBean) {
+				return beanInstance;
+			}
+			// 不是FactoryBean类型直接抛错
+			if (!(beanInstance instanceof FactoryBean)) {
+				throw new BeanIsNotAFactoryException(beanName, beanInstance.getClass());
+			}
+			if (mbd != null) {
+				mbd.isFactoryBean = true;
+			}
+			return beanInstance;
+		}
+
+		// Now we have the bean instance, which may be a normal bean or a FactoryBean.
+		// If it's a FactoryBean, we use it to create a bean instance, unless the
+		// caller actually wants a reference to the factory.
+		// 如果不是工厂bean，则直接返回。
+		if (!(beanInstance instanceof FactoryBean)) {
+			return beanInstance;
+		}
+
+		Object object = null;
+		if (mbd != null) {
+			mbd.isFactoryBean = true;
+		}
+		else {
+			object = getCachedObjectForFactoryBean(beanName);
+		}
+		if (object == null) {
+			// Return bean instance from factory.
+			FactoryBean<?> factory = (FactoryBean<?>) beanInstance;
+			// Caches object obtained from FactoryBean if it is a singleton.
+			if (mbd == null && containsBeanDefinition(beanName)) {
+				mbd = getMergedLocalBeanDefinition(beanName);
+			}
+			
+			// 是否是用户定义的而不是应用程序本身定义的
+			boolean synthetic = (mbd != null && mbd.isSynthetic());
+			object = getObjectFromFactoryBean(factory, beanName, !synthetic);
+		}
+		return object;
+	}
+```
+
+#### 获取单例
+
+**获取步骤**
+
+1. 检查缓存是否已经加载过
+
+2. 若没有加载，则记录beanName的正在加载状态
+
+3. 加载单例前记录加载状态（this.**singletonsCurrentlyInCreation**.add(beanName)）,方便检测循环依赖
+
+4. 通过调用参数传入ObjectFactory的个体Object方法实例化bean
+
+5. 加载单例后的处理方法调用（this.**singletonsCurrentlyInCreation**.remove(beanName)）
+
+6. 将结果记录至缓存并删除加载bean过程中所记录的各种辅助状态
+
+   ```
+   		synchronized (this.singletonObjects) {
+   			this.singletonObjects.put(beanName, singletonObject);
+   			this.singletonFactories.remove(beanName);
+   			this.earlySingletonObjects.remove(beanName);
+   			this.registeredSingletons.add(beanName);
+   		}
+   ```
+
+7. 返回处理结果
+
+```
+public Object getSingleton(String beanName, ObjectFactory<?> singletonFactory) {
+		Assert.notNull(beanName, "Bean name must not be null");
+		// 同步
+		synchronized (this.singletonObjects) {
+			// 检查是否已经加载
+			Object singletonObject = this.singletonObjects.get(beanName);
+			if (singletonObject == null) {
+				if (this.singletonsCurrentlyInDestruction) {
+					throw new BeanCreationNotAllowedException(beanName,
+							"Singleton bean creation not allowed while singletons of this factory are in destruction " +
+							"(Do not request a bean from a BeanFactory in a destroy method implementation!)");
+				}
+				if (logger.isDebugEnabled()) {
+					logger.debug("Creating shared instance of singleton bean '" + beanName + "'");
+				}
+				beforeSingletonCreation(beanName);
+				boolean newSingleton = false;
+				boolean recordSuppressedExceptions = (this.suppressedExceptions == null);
+				if (recordSuppressedExceptions) {
+					this.suppressedExceptions = new LinkedHashSet<>();
+				}
+				try {
+					// 初始化bean
+					singletonObject = singletonFactory.getObject();
+					newSingleton = true;
+				}
+				catch (IllegalStateException ex) {
+					// Has the singleton object implicitly appeared in the meantime ->
+					// if yes, proceed with it since the exception indicates that state.
+					singletonObject = this.singletonObjects.get(beanName);
+					if (singletonObject == null) {
+						throw ex;
+					}
+				}
+				catch (BeanCreationException ex) {
+					if (recordSuppressedExceptions) {
+						for (Exception suppressedException : this.suppressedExceptions) {
+							ex.addRelatedCause(suppressedException);
+						}
+					}
+					throw ex;
+				}
+				finally {
+					if (recordSuppressedExceptions) {
+						this.suppressedExceptions = null;
+					}
+					afterSingletonCreation(beanName);
+				}
+				if (newSingleton) {
+					addSingleton(beanName, singletonObject);
+				}
+			}
+			return singletonObject;
+		}
+	}
+```
+
+#### 创建bean
