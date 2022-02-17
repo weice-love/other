@@ -1,6 +1,7 @@
 package org.example.service;
 
 import org.example.entity.MyTestBean;
+import org.example.factorybean.Car;
 import org.example.label.Person;
 import org.example.lookup.GetBeanTest;
 import org.example.replace.TestChangeMethod;
@@ -20,6 +21,13 @@ public class TestService {
 //        getBean();
 //        lookupTest();
 //        replaceTest();
+//        selfParse();
+        BeanFactory beanFactory = new XmlBeanFactory(new ClassPathResource("factoryBeanTest.xml"));
+        Car car = (Car) beanFactory.getBean("car");
+        System.out.println("brand: " + car.getBrand() + ", maxSpeed: " + car.getMaxSpeed());
+    }
+
+    private static void selfParse() {
         BeanFactory beanFactory = new XmlBeanFactory(new ClassPathResource("personTest.xml"));
         Person testBean = (Person) beanFactory.getBean("testBean");
         System.out.println("name: " + testBean.getUserName() + ", email: " + testBean.getEmail() + ", id: ");
