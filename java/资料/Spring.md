@@ -646,7 +646,7 @@ protected Object createBean(String beanName, RootBeanDefinition mbd, @Nullable O
 
 3. MergedBeanDefinitionPostProcessor的应用，bean合并后的处理，Autowire注解正是通过此方法实现诸如类型的预解析
 
-4. 依赖处理，将bean的创建放入ObjectFactory、
+4. 依赖处理，将bean的创建放入ObjectFactory（AOP代理）、
 
 5. 属性填充
 
