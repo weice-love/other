@@ -758,3 +758,74 @@ protected Object doCreateBean(String beanName, RootBeanDefinition mbd, @Nullable
 
 
 
+### 容器的功能拓展
+
+#### Context的初始化
+
+**步骤：**
+
+1. 初始化前的准备工作，例如对系统属性或环境变量进行准备及验证（prepareRefresh();）
+
+   ```
+   protected void prepareRefresh() {
+   		// Switch to active.
+   		this.startupDate = System.currentTimeMillis();
+   		this.closed.set(false);
+   		this.active.set(true);
+   
+   		if (logger.isDebugEnabled()) {
+   			if (logger.isTraceEnabled()) {
+   				logger.trace("Refreshing " + this);
+   			}
+   			else {
+   				logger.debug("Refreshing " + getDisplayName());
+   			}
+   		}
+   
+   		// Initialize any placeholder property sources in the context environment.
+   		initPropertySources();
+   
+   		// Validate that all properties marked as required are resolvable:
+   		// see ConfigurablePropertyResolver#setRequiredProperties
+   		getEnvironment().validateRequiredProperties();
+   
+   		// Store pre-refresh ApplicationListeners...
+   		if (this.earlyApplicationListeners == null) {
+   			this.earlyApplicationListeners = new LinkedHashSet<>(this.applicationListeners);
+   		}
+   		else {
+   			// Reset local application listeners to pre-refresh state.
+   			this.applicationListeners.clear();
+   			this.applicationListeners.addAll(this.earlyApplicationListeners);
+   		}
+   
+   		// Allow for the collection of early ApplicationEvents,
+   		// to be published once the multicaster is available...
+   		this.earlyApplicationEvents = new LinkedHashSet<>();
+   	}
+   ```
+
+   
+
+2. 初始化BeanFactory，并进行XML文件读取，创建beanDefinition
+
+3. 对BeanFactory进行各种功能填充（@Autowire，@Qualifier）
+
+4. 子类覆盖方法做额外的处理
+
+5. 激活各种BeanFactory处理器
+
+6. **注册**拦截bean创建的bean处理器
+
+7. 为上下文初始化Message源，即对不同语言的消息体进行国际化处理
+
+8. 初始化应用消息广播器，并放入“applicationEventMulticaster”中
+
+9. 留给子类来初始化其他bean
+
+10. 在所有注册的bean中查找listener bean，注册到消息广播器中
+
+11. 初始化剩下的单实例（非惰性的）
+
+12. 完成刷新过程，通知生命周期处理器lifecycleProcessor刷新过程，同时发出ContextRefreshEvent通知别人
+

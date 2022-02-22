@@ -1,5 +1,6 @@
 package org.example.service;
 
+import org.example.aware.BeanAwareTest;
 import org.example.entity.MyTestBean;
 import org.example.factorybean.Car;
 import org.example.label.Person;
@@ -22,6 +23,14 @@ public class TestService {
 //        lookupTest();
 //        replaceTest();
 //        selfParse();
+//        factoryBeanTest();
+
+        BeanFactory beanFactory = new XmlBeanFactory(new ClassPathResource("applicationContext.xml"));
+        BeanAwareTest test = (BeanAwareTest) beanFactory.getBean("test");
+
+    }
+
+    private static void factoryBeanTest() {
         BeanFactory beanFactory = new XmlBeanFactory(new ClassPathResource("factoryBeanTest.xml"));
         Car car = (Car) beanFactory.getBean("car");
         System.out.println("brand: " + car.getBrand() + ", maxSpeed: " + car.getMaxSpeed());
