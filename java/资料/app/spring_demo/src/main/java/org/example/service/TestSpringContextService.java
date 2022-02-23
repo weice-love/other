@@ -12,12 +12,13 @@ public class TestSpringContextService {
 
 
     public static void main(String[] args) {
-        UserManager userManager = loadBean("beans.xml", "userManager", UserManager.class);
+        UserManager userManager = loadBean("org/example/context/support/beans.xml", "userManager", UserManager.class);
         System.out.println("date: " + userManager.getDateValue());
     }
 
     private static <T> T loadBean(String filePath, String beanName, Class<T> clazz) {
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(filePath);
+//        context.setValidating(false);
         return context.getBean(beanName, clazz);
     }
 }
