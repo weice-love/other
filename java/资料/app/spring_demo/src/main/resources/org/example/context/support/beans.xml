@@ -3,27 +3,26 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-<!--    日期型属性注入方式-->
+    <!--    日期型属性注入方式-->
     <bean id="userManager" class="org.example.context.UserManager" >
         <property name="dateValue" value="2022-02-25"/>
     </bean>
-
-    <bean class="org.springframework.beans.factory.config.CustomEditorConfigurer" >
-        <property name="customEditors" >
-            <map >
-                <entry key="java.util.Date" >
-                    <bean class="org.example.context.support.DatePropertyEditor">
-                        <property name="format" value="yyyy-MM-dd" />
-                    </bean>
-                </entry>
-            </map>
-<!--            <map>-->
-<!--                <entry key="java.util.Date">-->
-<!--                    <bean class="org.example.context.support.DatePropertyEditor">-->
-<!--                        <property name="format" value="yyyy-MM-dd" />-->
-<!--                    </bean>-->
+<!--    方法一:    自定义属性编辑器-->
+<!--    <bean class="org.springframework.beans.factory.config.CustomEditorConfigurer" >-->
+<!--        <property name="customEditors" >-->
+<!--            <map >-->
+<!--                <entry key="java.util.Date" value="org.example.context.support.DatePropertyEditor">-->
 <!--                </entry>-->
 <!--            </map>-->
+<!--        </property>-->
+<!--    </bean>-->
+
+<!--   方法二:    使用Spring属性编辑器-->
+    <bean class="org.springframework.beans.factory.config.CustomEditorConfigurer" >
+        <property name="propertyEditorRegistrars" >
+            <list>
+                <bean class="org.example.context.support.DatePropertyEditorRegistrar" />
+            </list>
         </property>
     </bean>
 

@@ -18,7 +18,6 @@ public class TestSpringContextService {
 
     private static <T> T loadBean(String filePath, String beanName, Class<T> clazz) {
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(filePath);
-//        context.setValidating(false);
         return context.getBean(beanName, clazz);
     }
 }
