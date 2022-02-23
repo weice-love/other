@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+<!--    日期型属性注入方式-->
+    <bean id="userManager" class="org.example.context.UserManager" >
+        <property name="dateValue" value="2022-02-25"/>
+    </bean>
+</beans>

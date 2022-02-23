@@ -15,7 +15,7 @@ import org.springframework.core.io.ClassPathResource;
  * <p> description :
  * <p> create date :  2022/2/11 11:41
  */
-public class TestService {
+public class TestBeanFactoryService {
 
 
     public static void main(String[] args) {
