@@ -7,8 +7,13 @@ import org.example.context.UserManager;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanFactory;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.core.io.ClassPathResource;
+
+import java.nio.charset.StandardCharsets;
+import java.util.GregorianCalendar;
+import java.util.Locale;
 
 /**
  * <p> @author     :  清风
@@ -22,8 +27,14 @@ public class TestSpringContextService {
 //        selfPropertySettingTest();
 //        msgGettingTest();
 //        Teacher teacher = loadBean1("beans.xml", "teacher", Teacher.class);
-        Teacher teacher = loadBean("beans.xml", "teacher", Teacher.class);
-        System.out.println(teacher);
+//        Teacher teacher = loadBean("beans.xml", "teacher", Teacher.class);
+//        System.out.println(teacher);
+        ApplicationContext applicationContext = loadContext("internation.xml");
+        Object[] params = {"John", new GregorianCalendar().getTime()};
+        String CHINA = applicationContext.getMessage("test", params, Locale.CHINA);
+        String US = applicationContext.getMessage("test", params, Locale.US);
+        System.out.println(US);
+        System.out.println(CHINA);
     }
 
     private static void msgGettingTest() {
@@ -41,6 +52,9 @@ public class TestSpringContextService {
         return context.getBean(beanName, clazz);
     }
 
+    private static ApplicationContext loadContext(String filePath) {
+        return new ClassPathXmlApplicationContext(filePath);
+    }
     private static <T> T loadBean1(String filePath, String beanName, Class<T> clazz) {
 //        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(filePath);
         ConfigurableListableBeanFactory beanFactory = new XmlBeanFactory(new ClassPathResource(filePath));
