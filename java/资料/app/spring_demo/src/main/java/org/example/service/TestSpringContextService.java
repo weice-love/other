@@ -4,6 +4,7 @@ import org.example.context.HelloMessage;
 import org.example.context.SensitiveAttributeFilter;
 import org.example.context.Teacher;
 import org.example.context.UserManager;
+import org.example.event.TestEvent;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanFactory;
@@ -29,6 +30,13 @@ public class TestSpringContextService {
 //        Teacher teacher = loadBean1("beans.xml", "teacher", Teacher.class);
 //        Teacher teacher = loadBean("beans.xml", "teacher", Teacher.class);
 //        System.out.println(teacher);
+//        localeTest();
+        ApplicationContext applicationContext = loadContext("event.xml");
+        TestEvent testEvent = new TestEvent("hello", "msg");
+        applicationContext.publishEvent(testEvent);
+    }
+
+    private static void localeTest() {
         ApplicationContext applicationContext = loadContext("internation.xml");
         Object[] params = {"John", new GregorianCalendar().getTime()};
         String CHINA = applicationContext.getMessage("test", params, Locale.CHINA);
