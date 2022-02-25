@@ -4,15 +4,18 @@ import org.example.context.HelloMessage;
 import org.example.context.SensitiveAttributeFilter;
 import org.example.context.Teacher;
 import org.example.context.UserManager;
+import org.example.converter.Student;
 import org.example.event.TestEvent;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.core.io.ClassPathResource;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
@@ -31,6 +34,15 @@ public class TestSpringContextService {
 //        Teacher teacher = loadBean("beans.xml", "teacher", Teacher.class);
 //        System.out.println(teacher);
 //        localeTest();
+//        eventTest();
+        ConversionService conversionService = loadBean("converter.xml", "conversionService", ConversionService.class);
+        Student convert = conversionService.convert("2022-02-25 11:35:35", Student.class);
+        System.out.println(convert);
+        Date date = conversionService.convert("2022-02-25 11:35:35", Date.class);
+        System.out.println(date);
+    }
+
+    private static void eventTest() {
         ApplicationContext applicationContext = loadContext("event.xml");
         TestEvent testEvent = new TestEvent("hello", "msg");
         applicationContext.publishEvent(testEvent);
