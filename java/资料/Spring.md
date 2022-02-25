@@ -829,3 +829,7 @@ protected Object doCreateBean(String beanName, RootBeanDefinition mbd, @Nullable
 
 12. 完成刷新过程，通知生命周期处理器lifecycleProcessor刷新过程，同时发出ContextRefreshEvent通知别人
 
+
+
+### AOP
+
