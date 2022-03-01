@@ -1,7 +1,5 @@
 package org.example.aop;
 
-import org.aspectj.lang.annotation.Aspect;
-
 /**
  * <p> @author     :  清风
  * <p> description :

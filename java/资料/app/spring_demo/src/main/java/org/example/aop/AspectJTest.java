@@ -15,7 +15,7 @@ import org.aspectj.lang.annotation.Pointcut;
 @Aspect
 public class AspectJTest {
 
-    @Pointcut("execution(* *.aop(..))")
+    @Pointcut("execution(* org.example.aop.AopEntity.print(..))")
     public void test() {
 
     }

@@ -1,5 +1,6 @@
 package org.example.service;
 
+import org.example.aop.AopEntity;
 import org.example.context.HelloMessage;
 import org.example.context.SensitiveAttributeFilter;
 import org.example.context.Teacher;
@@ -35,6 +36,12 @@ public class TestSpringContextService {
 //        System.out.println(teacher);
 //        localeTest();
 //        eventTest();
+//        convertTest();
+        AopEntity aopEntity = loadBean("aop.xml", "aopEntity", AopEntity.class);
+        aopEntity.print();
+    }
+
+    private static void convertTest() {
         ConversionService conversionService = loadBean("converter.xml", "conversionService", ConversionService.class);
         Student convert = conversionService.convert("2022-02-25 11:35:35", Student.class);
         System.out.println(convert);
