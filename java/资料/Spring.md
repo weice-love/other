@@ -833,3 +833,40 @@ protected Object doCreateBean(String beanName, RootBeanDefinition mbd, @Nullable
 
 ### AOP
 
+#### 属性解析
+
+1. proxy-target-class
+
+   ```
+   Spring AOP 部分使用 JDK 动态代理(至少实现一个接口)或者 CGLIB 来为目标对象创建代理
+   
+   ps: 强制使用CGLIB,增加以下配置
+   <aop:config proxy-target-class="true" />
+   ```
+
+2. expose-proxy 
+
+   ```
+   有时候目标对象内部的自我调用将无法实施切面中的增强。
+   
+   解决方案：
+   <aop:config expose-proxy="true" />
+   (实现的接口) AopContext.currentProxy()).具体方法() ；
+   ```
+
+#### 动态代理分类
+
+- **JDK动态代理**
+
+  ```
+  其代理对象必须是某个接口的实现，他是通过在运行期间创建一个接口的实现类来完成对目标对象的代理
+  ```
+
+- **CGLIB代理**
+
+  ```
+  在运行期间生成的代理对象是针对目标类扩展的子类。CGLIB是高效的代码生成包，底层是依靠ASM（开源的字节码编辑类库）操作字节码实现的，性能比jdk强
+  ```
+
+  
+

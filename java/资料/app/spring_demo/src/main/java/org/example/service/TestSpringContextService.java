@@ -1,13 +1,14 @@
 package org.example.service;
 
 import org.example.aop.AopEntity;
+import org.example.aop.AopEntityV2;
+import org.example.aop.Print;
+import org.example.aop.PrintV3;
 import org.example.context.HelloMessage;
 import org.example.context.SensitiveAttributeFilter;
-import org.example.context.Teacher;
 import org.example.context.UserManager;
 import org.example.converter.Student;
 import org.example.event.TestEvent;
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.context.ApplicationContext;
@@ -15,7 +16,6 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.io.ClassPathResource;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
@@ -37,6 +37,21 @@ public class TestSpringContextService {
 //        localeTest();
 //        eventTest();
 //        convertTest();
+//        aopTest1();
+//        aopTest2();
+
+        PrintV3 aopEntity = loadBean("aop.xml", "aopEntityV3", PrintV3.class);
+        aopEntity.print();
+    }
+
+    private static void aopTest2() {
+        Print aopEntity = loadBean("aop.xml", "aopEntityV2", Print.class);
+        aopEntity.print();
+        AopEntityV2 aopEntityV2 = loadBean("aop.xml", "aopEntityV2", AopEntityV2.class);
+        aopEntityV2.print();
+    }
+
+    private static void aopTest1() {
         AopEntity aopEntity = loadBean("aop.xml", "aopEntity", AopEntity.class);
         aopEntity.print();
     }
