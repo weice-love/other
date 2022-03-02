@@ -9,13 +9,14 @@ import org.aspectj.lang.annotation.Pointcut;
 
 /**
  * <p> @author     :  清风
- * <p> description :
+ * <p> description :  启动jvm参数需要加上该命令
+ *                           -noverify
  * <p> create date :  2022/2/25 15:07
  */
 @Aspect
 public class AspectJTest {
 
-    @Pointcut("execution(* org.example.aop.AopEntity.print(..))")
+    @Pointcut("execution(* org.example..*.*(..))")
     public void test() {
 
     }
