@@ -39,7 +39,11 @@ public class TestSpringContextService {
 //        convertTest();
 //        aopTest1();
 //        aopTest2();
+        aopTest3();
 
+    }
+
+    private static void aopTest3() {
         PrintV3 aopEntity = loadBean("aop.xml", "aopEntityV3", PrintV3.class);
         aopEntity.print();
     }
