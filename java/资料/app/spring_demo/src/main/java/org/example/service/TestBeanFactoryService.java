@@ -27,6 +27,7 @@ public class TestBeanFactoryService {
 
         BeanFactory beanFactory = new XmlBeanFactory(new ClassPathResource("applicationContext.xml"));
         BeanAwareTest test = (BeanAwareTest) beanFactory.getBean("test");
+        test.test();
 
     }
 

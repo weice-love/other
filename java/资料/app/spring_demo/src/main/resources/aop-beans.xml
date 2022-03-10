@@ -20,7 +20,7 @@
     <aop:config expose-proxy="true" />
     <aop:aspectj-autoproxy proxy-target-class="true" />
 
-    <context:load-time-weaver/>
+<!--    <context:load-time-weaver/>-->
 
 
     <bean id="aopEntity" class="org.example.aop.AopEntity" />

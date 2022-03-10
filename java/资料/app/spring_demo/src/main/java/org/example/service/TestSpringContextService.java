@@ -37,9 +37,9 @@ public class TestSpringContextService {
 //        localeTest();
 //        eventTest();
 //        convertTest();
-//        aopTest1();
+        aopTest1();
 //        aopTest2();
-        aopTest3();
+//        aopTest3();
 
     }
 
