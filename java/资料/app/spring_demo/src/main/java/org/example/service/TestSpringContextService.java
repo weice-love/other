@@ -44,19 +44,19 @@ public class TestSpringContextService {
     }
 
     private static void aopTest3() {
-        PrintV3 aopEntity = loadBean("aop.xml", "aopEntityV3", PrintV3.class);
+        PrintV3 aopEntity = loadBean("aop-beans.xml", "aopEntityV3", PrintV3.class);
         aopEntity.print();
     }
 
     private static void aopTest2() {
-        Print aopEntity = loadBean("aop.xml", "aopEntityV2", Print.class);
+        Print aopEntity = loadBean("aop-beans.xml", "aopEntityV2", Print.class);
         aopEntity.print();
-        AopEntityV2 aopEntityV2 = loadBean("aop.xml", "aopEntityV2", AopEntityV2.class);
+        AopEntityV2 aopEntityV2 = loadBean("aop-beans.xml", "aopEntityV2", AopEntityV2.class);
         aopEntityV2.print();
     }
 
     private static void aopTest1() {
-        AopEntity aopEntity = loadBean("aop.xml", "aopEntity", AopEntity.class);
+        AopEntity aopEntity = loadBean("aop-beans.xml", "aopEntity", AopEntity.class);
         aopEntity.print();
     }
 

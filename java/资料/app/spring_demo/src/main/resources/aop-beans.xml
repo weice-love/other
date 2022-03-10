@@ -2,13 +2,14 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:aop="http://www.springframework.org/schema/aop"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-<!--            Print aopEntity = loadBean("aop.xml", "aopEntityV2", Print.class);-->
+<!--            Print aopEntity = loadBean("aop-beans.xml", "aopEntityV2", Print.class);-->
 <!--            aopEntity.print();-->
 <!--    <aop:aspectj-autoproxy />-->
 
-<!--    AopEntityV2 aopEntityV2 = loadBean("aop.xml", "aopEntityV2", AopEntityV2.class);-->
+<!--    AopEntityV2 aopEntityV2 = loadBean("aop-beans.xml", "aopEntityV2", AopEntityV2.class);-->
 <!--    aopEntityV2.print();-->
 <!--    proxy-target-class="true" 强制使用cglib代理-->
 <!--    <aop:config proxy-target-class="true" />-->
@@ -18,6 +19,9 @@
 <!--        在运行期间生成的代理对象是针对目标类扩展的子类。CGLIB是高效的代码生成包，底层是依靠ASM（开源的字节码编辑类库）操作字节码实现的，性能比jdk强-->
     <aop:config expose-proxy="true" />
     <aop:aspectj-autoproxy proxy-target-class="true" />
+
+    <context:load-time-weaver/>
+
 
     <bean id="aopEntity" class="org.example.aop.AopEntity" />
     <bean id="aopEntityV2" class="org.example.aop.AopEntityV2" />

@@ -868,5 +868,19 @@ protected Object doCreateBean(String beanName, RootBeanDefinition mbd, @Nullable
   在运行期间生成的代理对象是针对目标类扩展的子类。CGLIB是高效的代码生成包，底层是依靠ASM（开源的字节码编辑类库）操作字节码实现的，性能比jdk强
   ```
 
+
+
+### AOP代理
+
+- AOP动态代理
+
+- AOP静态代理
+
+  虚拟机启动时，改变目标对象的字节码来完成对目标对象的增强
+
+  优点：
+
+  - 效率高
+
   
 
