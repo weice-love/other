@@ -40,3 +40,14 @@ start cmd /k "cd/d D:\\Redis-x64-3.2.100 &&redis-server.exe &&taskkill /f /t /im
 3. 输入账号密码
 ```
 
+#### 文件重命名
+
+```
+$a=8
+ls Scan_*.jpg | foreach{ 
+	$a++
+	ren $_.name ($_.name -replace 'Scan_\d+', $a)
+	}
+	
+```
+
