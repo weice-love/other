@@ -21,6 +21,24 @@
   <dependencies>
 
       <dependency>
+          <groupId>org.bouncycastle</groupId>
+          <artifactId>bcprov-jdk15to18</artifactId>
+          <version>1.70</version>
+      </dependency>
+      <!-- https://mvnrepository.com/artifact/com.github.peter-gergely-horvath/windpapi4j -->
+      <dependency>
+          <groupId>com.github.peter-gergely-horvath</groupId>
+          <artifactId>windpapi4j</artifactId>
+          <version>1.0</version>
+      </dependency>
+      <dependency>
+          <groupId>net.java.dev.jna</groupId>
+          <artifactId>jna</artifactId>
+          <version>5.10.0</version>
+      </dependency>
+
+
+      <dependency>
           <groupId>org.javassist</groupId>
           <artifactId>javassist</artifactId>
           <version>3.25.0-GA</version>
