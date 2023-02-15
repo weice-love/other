@@ -1,0 +1,11 @@
+FROM iceanruoxin/tugraph:1.0.1
+
+COPY jdk-8u202-linux-arm64-vfp-hflt.tar.gz /root/software/jdk-8u202-linux-arm64-vfp-hflt.tar.gz
+COPY get-pip.py /root/software/get-pip.py
+
+RUN mkdir -p /root/software && cd /root/software && tar -zxvf jdk-8u202-linux-arm64-vfp-hflt.tar.gz
+RUN mkdir -p /usr/jre && cp -r /root/software/jdk1.8.0_202/jre/* /usr/jre
+COPY profile /etc/profile
+RUN source /etc/profile && java -version
+RUN yum -y install gcc-g++ boost boost-devel
+RUN python get-pip.py && pip install requests
